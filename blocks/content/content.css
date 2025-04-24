@@ -94,8 +94,11 @@
 
 .content__items {
     display: flex;
+    gap: 16px;
     /* justify-content: space-between; */
-    /* gap: 16px; */
+    overflow: hidden;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 
 .content__items_games, .content__items_services, .content__items_programms {
@@ -137,6 +140,12 @@
         border-radius: 32px;
     }
 
+    .content__items {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
     .content__advantage {
         padding: 19.5px 16px;
         width: calc(100% - 32px);
@@ -152,7 +161,7 @@
 
     .content__image {
         height: 164px;
-        width: 44vw;
+        width: 43vw;
     }
 
     .content__services {

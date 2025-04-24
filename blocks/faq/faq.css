@@ -12,6 +12,8 @@
     align-items: center;
     justify-content: space-between; */
     cursor: pointer;
+    transition: .3s;
+    height: fit-content;
 }
 
 .faq__question:first-child {
@@ -36,3 +38,16 @@
     font-size: 16px;
 }
 
+.faq__arrow-icon {
+    transition: .3s;
+}
+
+.rotate {
+    transform: rotate(180deg);
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(180deg)
+    }
+}

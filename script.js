@@ -5,6 +5,8 @@ let popupWrapper = document.querySelector('.popup__wrapper');
 let popupTitle = document.querySelector('.popup__title');
 let popupContent = document.querySelector('.popup__content');
 let findButton = document.querySelector('.banner__button_find');
+let faqSector = document.querySelector('.faq__questions');
+let faqQuestion = document.querySelector('.faq__question');
 
 document.addEventListener('click', (e) => {
 
@@ -110,3 +112,12 @@ document.addEventListener('click', (e) => {
 //     document.querySelector('.content__items_games').classList.add('swiper-games');
 
 // }
+
+// FAQ
+
+faqSector.addEventListener('click', (e) => {
+    if(e.target.classList.contains('faq__question')) {
+        e.target.querySelector('.faq__answer').classList.toggle('hidden');
+        e.target.querySelector('.faq__arrow-icon').classList.toggle('rotate');
+    }
+})

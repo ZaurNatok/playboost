@@ -1,0 +1,60 @@
+@import url('../blocks/topline/topline.css');
+@import url('../blocks/banner/banner.css');
+@import url('../blocks/popup/popup.css');
+@import url('../blocks/content/content.css');
+@import url('../blocks/findService/find-service.css');
+@import url('../blocks/news/news.css');
+@import url('../blocks/faq/faq.css');
+@import url('../blocks/footer.css/footer.css');
+
+body {
+    background-color: #06010a;
+}
+
+.page {
+    max-width: 1440px;
+    margin: auto;
+    position: relative;
+}
+
+.play-regular {
+    font-family: "Play", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+.play-bold {
+    font-family: "Play", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.page__light {
+    height: 1500px;
+    width: 2000px;
+    background: radial-gradient(circle 500px, #3c1156, transparent);
+    position: absolute;
+    left: -1000px;
+    top: -350px;
+    z-index: -1;
+}
+
+.page__light_center {
+    height: 1500px;
+    width: 2000px;
+    background: radial-gradient(circle 500px, #3c1156, transparent);
+    position: absolute;
+    left: -1000px;
+    top: 1850px;
+    z-index: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (max-width: 430px) {
+    .page {
+        overflow: hidden;
+    }
+}

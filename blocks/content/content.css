@@ -1,0 +1,156 @@
+.content {
+    background-color: #1f1b23;
+    border-radius: 60px;
+    display: block;
+    padding: 32px 32px 80px 32px;
+}
+
+.content__advantages {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 80px;
+    position: relative;
+}
+
+.content__advantage {
+    display: flex;
+    background-color: #06010a;
+    border-radius: 24px;
+    padding: 20px 31.5px;
+    align-items: center;
+    width: 100%;
+}
+
+.advantage__title {
+    color: #fff;
+    font-size: 20px;
+    margin: 0;
+}
+
+.advantage__subtitle {
+    color: #b4b3b5;
+    font-size: 16px;
+    margin: 4px 0 0 0;
+}
+
+.advantage__image {
+    margin-right: 20px;
+}
+
+.content__services {
+    margin-bottom: 100px;
+    position: relative;
+}
+
+.content__topline {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.content__sector-title {
+    margin: 0 16px 0 0;
+    color: #fff;
+    font-size: 32px;
+}
+
+.content__left {
+    display: flex;
+    align-items: center;
+}
+
+.content__sector-link {
+    text-decoration: none;
+    color: #fff;
+    padding: 12.5px 24px;
+    background-color: #363239;
+    border-radius: 100px;
+    font-size: 16px;
+}
+
+.section__arrows {
+    display: flex;
+}
+
+.section__arrow {
+    background-color: #363239;
+    border-radius: 100%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+.arrows {
+    margin: auto;
+    color: #fff;
+}
+
+.section__arrow:not(:last-child) {
+    margin-right: 8px;
+}
+
+.content__items {
+    display: flex;
+    /* justify-content: space-between; */
+    /* gap: 16px; */
+}
+
+.content__items_games, .content__items_services, .content__items_programms {
+    overflow: hidden;
+}
+
+.content__image {
+    width: 216px;
+    height: 216px;
+    background-position: center;
+    background-size: cover;
+    border-radius: 24px;
+}
+
+.content__title {
+    text-align: center;
+    color: #fff;
+    font-size: 18px;
+}
+
+.content__link {
+    text-decoration: none;
+}
+
+
+@media screen and (max-width: 430px) {
+    .content__advantages {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .content {
+        padding: 20px 20px 56px 20px;
+        border-radius: 32px;
+    }
+
+    .content__advantage {
+        padding: 19.5px 16px;
+        width: calc(100% - 32px);
+    }
+
+    .content__sector-link {
+        display: none;
+    }
+
+    .section__arrows {
+        display: none;
+    }
+
+    .content__image {
+        height: 164px;
+        width: 44vw;
+    }
+
+    .content__services {
+        margin-bottom: 56px;
+    }
+}

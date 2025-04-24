@@ -1,0 +1,40 @@
+.popup__find-service-area {
+    width: calc(100% - 64px);
+}
+
+.popup__label {
+    font-size: 14px;
+    color: #d8d6d8;
+    font-weight: 400;
+}
+
+.input-area {
+    position: relative;
+}
+
+.popup__input {
+    width: 100%;
+    background-color: #4a474d;
+    border: none;
+    padding: 18.5px 40px 18.5px 18.5px;
+    border-radius: 16px;
+    color: #fff;
+    margin: 12px 0 32px 0;
+    /* position: relative; */
+}
+
+.popup__input:focus-visible {
+    border: none;
+    outline: none;
+}
+
+.popup__input-icon {
+    position: absolute;
+    top: calc(50% - 23px);
+    right: -42px;
+    cursor: pointer;
+}
+
+.popup__find-service-area .banner__button {
+    width: 100% !important;
+}

@@ -1,0 +1,122 @@
+.topline {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.topline__logo {
+    color:#fff;
+    line-height: 80%;
+    font-size: 24px;
+}
+
+.topline__popular {
+    display: flex;
+    max-width: 1060px;
+}
+
+.topline__popular_mobile {
+    display: none;
+}
+
+.topline__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 32px;
+    background-color: #291c31;
+    padding: 8px 20px 8px 8px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.topline__item:hover {
+    background-color: #3a3440;
+}
+
+.topline__item:not(:last-child) {
+    margin-right: 8px;
+}
+
+.topline__item_more {
+    border-radius: 100%;
+    padding: 8px 16px;
+}
+
+.topline__item_more:hover > .topline__icon {
+    background-color: #3a3440;
+}
+
+.topline__icon {
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 100%;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.topline__item_more .topline__icon {
+    margin-right: 0;
+    background-color: #291c31;
+    width: 24px;
+    height: 24px;
+}
+
+.topline__title {
+    font-size: 16px;
+    margin: 0;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.topline__search-icon {
+    width: 56px;
+    height: 56px;
+    background-color: #291c31;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.topline__search-icon:hover {
+    background-color: #3a3440;
+}
+
+
+
+
+@media screen and (max-width: 430px) {
+    .topline {
+        padding: 16px 20px;
+    }
+
+    .topline__popular {
+        display: none;
+    }
+    
+    .topline__popular_mobile {
+        display: flex;
+        max-width: calc(100% - 20px);
+        margin: 0 0 0 20px;
+        overflow: hidden;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .topline__item_more {
+        display: none;
+    }
+    
+    .topline__icon {
+        width: 24px;
+        height: 24px;
+    }
+}

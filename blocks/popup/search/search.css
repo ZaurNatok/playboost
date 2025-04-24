@@ -1,0 +1,23 @@
+.popup__search {
+    width: calc(100% - 64px);
+    background-color: #4a474d;
+    border: none;
+    padding: 18.5px 16px 18.5px 52px;
+    border-radius: 32px;
+    color: #fff;
+}
+
+.popup__search:focus-visible {
+    border: none;
+    outline: none;
+}
+
+.popup__search-area {
+    position: relative;
+}
+
+.popup__search-icon {
+    position: absolute;
+    top: calc(50% - 12px);
+    left: 20px;
+}

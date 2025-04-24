@@ -1,0 +1,55 @@
+.find-service {
+    display: flex;
+    background-color: #07010B;
+    padding: 30px 56px;
+    border-radius: 20px;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 100px;
+}
+
+.find-service__left {
+    display: flex;
+    align-items: center;
+}
+
+.find-service__image {
+    margin-right: 32px;
+}
+
+.find-service__text {
+    max-width: 466px;
+}
+
+.find-service__title {
+    color: #fff;
+    font-size: 32px;
+    margin: 0;
+}
+
+.find-service__subtitle {
+    color: #fff;
+    font-size: 18px;
+    margin: 8px 0 0 0;
+}
+
+@media screen and (max-width: 430px) {
+    .find-service {
+        flex-direction: column;
+        padding: 20px;
+        margin-bottom: 56px;
+    }
+
+    .find-service__left {
+        flex-direction: column; 
+    }
+
+    .find-service__subtitle {
+        margin-bottom: 40px;
+    }
+
+    .find-service .banner__button {
+        width: calc(100% - 60px);
+    } 
+}

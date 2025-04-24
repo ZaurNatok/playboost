@@ -142,8 +142,13 @@
 
     .content__items {
         display: flex;
-        gap: 6px;
+        gap: 8px;
         flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .content__link {
+        width: calc(50% - 8px);
     }
 
     .content__advantage {
@@ -161,7 +166,7 @@
 
     .content__image {
         height: 164px;
-        width: 100%;
+        width: 44vw;
     }
 
     .content__services {

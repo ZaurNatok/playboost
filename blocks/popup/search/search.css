@@ -21,3 +21,42 @@
     top: calc(50% - 12px);
     left: 20px;
 }
+
+.search-result {
+    font-family: "Play", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    color: #fff;
+    margin-top: 16px;
+}
+
+.search-result__item {
+    display: flex;
+    align-items: center;
+    font-family: "Play", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 16px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.search-result__item:hover {
+    background-color: #4a474d;
+    border-radius: 12px;
+}
+
+.search-result__img {
+    width: 40px;
+    height: 40px;
+    background-position: center;
+    background-size: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+}
+
+.search-result__title {
+    margin: 0;
+}

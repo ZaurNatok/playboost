@@ -25,6 +25,7 @@ document.addEventListener('click', (e) => {
         let searchArea = document.createElement('div');
         let searchImage = document.createElement('img');
         let searchInput = document.createElement('input');
+        let searchResult = document.createElement('div');
 
         searchArea.classList.add('popup__search-area');
         searchImage.classList.add('popup__search-icon');
@@ -33,11 +34,50 @@ document.addEventListener('click', (e) => {
         searchInput.classList.add('play-regular');
         searchInput.setAttribute('type', 'text');
         searchInput.setAttribute('placeholder', 'Поиск');
+        searchResult.classList.add('search-result');
 
         popupContent.appendChild(searchArea);
         searchArea.appendChild(searchImage);
         searchArea.appendChild(searchInput);
-    }     if(e.target == findButton) {
+        popupContent.appendChild(searchResult);
+
+        // Поиск
+
+        searchInput.addEventListener('input', () => {
+
+            searchResult.textContent = '';
+            if(searchService(searchInput.value) == false) {
+                searchResult.textContent = 'Ничего не найдено';
+            } else if(searchInput.value == '') {
+                searchResult.textContent = '';
+            } else {
+                let res = searchService(searchInput.value);
+
+                res.forEach(el => {
+
+                    let searchResultItem = document.createElement('a');
+                    let searchResultItemImage = document.createElement('div');
+                    let searchResultItemTitle = document.createElement('h3');
+
+                    searchResultItem.classList.add('search-result__item');
+                    searchResultItemImage.classList.add('search-result__img');
+                    searchResultItemTitle.classList.add('search-result__title');
+
+                    searchResult.appendChild(searchResultItem);
+                    searchResultItem.appendChild(searchResultItemImage);
+                    searchResultItem.appendChild(searchResultItemTitle);
+                    
+                    searchResultItemImage.setAttribute('style', `background-image:url(${el.serviceImage})`);
+                    searchResultItem.setAttribute('href', `/service?id=${el.id}`)
+                    searchResultItemTitle.textContent = el.name;
+                })
+
+            }
+
+
+        });
+
+    }   if(e.target == findButton) {
         popup.classList.remove('hidden');
         popupTitle.textContent = 'Оставьте заявку на добавление игры, сервиса или программы в наш каталог';
         
@@ -121,3 +161,25 @@ faqSector.addEventListener('click', (e) => {
         e.target.querySelector('.faq__arrow-icon').classList.toggle('rotate');
     }
 })
+
+// Загрузка всех сервисов
+
+// console.log(services);
+
+// Поиск
+
+function searchService(value) {
+    let searchResult = [];
+
+    services.forEach(el => {
+        if(el.name.toLowerCase().includes(value.toLowerCase())) {
+            searchResult.push(el);
+        }
+    })
+
+    if(searchResult.length == 0) {
+        return false;
+    } else {
+        return searchResult
+    }
+}

@@ -147,10 +147,6 @@
         justify-content: space-between;
     }
 
-    .content__link {
-        /* width: calc(50% - 8px); */
-    }
-
     .content__advantage {
         padding: 19.5px 16px;
         width: calc(100% - 32px);

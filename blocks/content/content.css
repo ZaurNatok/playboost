@@ -161,7 +161,7 @@
 
     .content__image {
         height: 164px;
-        width: 43vw;
+        width: 100%;
     }
 
     .content__services {

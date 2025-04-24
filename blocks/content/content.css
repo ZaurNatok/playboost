@@ -148,7 +148,7 @@
     }
 
     .content__link {
-        width: calc(50% - 8px);
+        /* width: calc(50% - 8px); */
     }
 
     .content__advantage {

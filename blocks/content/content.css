@@ -120,6 +120,11 @@
     text-decoration: none;
 }
 
+.mobile {
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 
 @media screen and (max-width: 430px) {
     .content__advantages {

@@ -30,6 +30,10 @@
     margin-top: 16px;
 }
 
+.search-result__item:first-child {
+    margin-top: 16px;
+}
+
 .search-result__item {
     display: flex;
     align-items: center;
@@ -38,14 +42,15 @@
     font-style: normal;
     color: #fff;
     font-size: 16px;
-    margin-top: 16px;
     cursor: pointer;
     text-decoration: none;
+    padding: 7px 10px;
+    transition: .3s;
 }
 
 .search-result__item:hover {
     background-color: #4a474d;
-    border-radius: 12px;
+    border-radius: 32px;
 }
 
 .search-result__img {

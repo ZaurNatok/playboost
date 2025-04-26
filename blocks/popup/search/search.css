@@ -28,6 +28,8 @@
     font-style: normal;
     color: #fff;
     margin-top: 16px;
+    max-height: 350px;
+    overflow-y: scroll;
 }
 
 .search-result__item:first-child {
@@ -64,4 +66,10 @@
 
 .search-result__title {
     margin: 0;
+}
+
+@media screen and (max-width: 430px) {
+    .search-result {
+        max-height: 60vh;
+    }
 }

@@ -33,5 +33,23 @@ let services = [
                 "regexp": "^\\d{1,3}$"
             }
         ]
+    },
+
+    {
+        id: 'P0103',
+        name: 'Roblox',
+        group: 'games',
+        fixedPayment: 'no',
+        country: 'При регистрации нового аккаунта используйте почту с доменом gmail.com',
+        isPopular: true,
+        serviceImage: './img/roblox.png',
+        inputs: [
+            {
+                "name": "account",
+                "required": true,
+                "title": "Введите аккаунт",
+                "regexp": "^\\d{1,3}$"
+            }
+        ]
     }
 ]

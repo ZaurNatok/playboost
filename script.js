@@ -8,6 +8,15 @@ let findButton = document.querySelector('.banner__button_find');
 let faqSector = document.querySelector('.faq__questions');
 let faqQuestion = document.querySelector('.faq__question');
 
+// Games
+let gamesContainer = document.querySelector('.content__items_games');
+// services
+let servicesContainer = document.querySelector('.content__items_services');
+// programms
+let programmsContainer = document.querySelector('.content__items_programms');
+
+// Popup
+
 document.addEventListener('click', (e) => {
 
     popupCloseButton.addEventListener('click', () => {
@@ -73,8 +82,6 @@ document.addEventListener('click', (e) => {
                 })
 
             }
-
-
         });
 
     }   if(e.target == findButton) {
@@ -164,7 +171,44 @@ faqSector.addEventListener('click', (e) => {
 
 // Загрузка всех сервисов
 
-// console.log(services);
+createCard(services);
+
+function createCard(services) {
+
+    services.forEach(el => {
+        let serviceItemLink = document.createElement('a');
+        let serviceItem = document.createElement('div');
+        let serviceItemTitle = document.createElement('h3');
+        let serviceImage = document.createElement('div');
+    
+        serviceItemLink.classList.add('content__link');
+        serviceItemLink.setAttribute('href', `/service?id=${el.id}`);
+        serviceItem.classList.add('content__item');
+        serviceItemTitle.classList.add('content__title');
+        serviceImage.setAttribute('style', `background-image:url(${el.serviceImage})`)
+        serviceImage.classList.add('content__image');
+        serviceItemTitle.textContent = el.name;
+
+
+        if(el.group == 'games') {
+            gamesContainer.querySelector('.content__items').appendChild(serviceItemLink);
+            serviceItemLink.appendChild(serviceItem);
+            serviceItem.appendChild(serviceImage);
+            serviceItem.appendChild(serviceItemTitle);
+        } else if(el.group == 'services') {
+            servicesContainer.querySelector('.content__items').appendChild(serviceItemLink);
+            serviceItemLink.appendChild(serviceItem);
+            serviceItem.appendChild(serviceImage);
+            serviceItem.appendChild(serviceItemTitle);
+        } else if(el.group == 'programms') {
+            programmsContainer.querySelector('.content__items').appendChild(serviceItemLink);
+            serviceItemLink.appendChild(serviceItem);
+            serviceItem.appendChild(serviceImage);
+            serviceItem.appendChild(serviceItemTitle);
+        }
+    })
+
+}
 
 // Поиск
 
@@ -180,6 +224,7 @@ function searchService(value) {
     if(searchResult.length == 0) {
         return false;
     } else {
-        return searchResult
+        return searchResult;
     }
 }
+

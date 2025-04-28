@@ -54,7 +54,7 @@ let services = [
     },
 
     {
-        id: 'P0104',
+        id: 'P0113',
         name: 'Valorant',
         group: 'games',
         fixedPayment: 'no',
@@ -270,7 +270,7 @@ let services = [
     },
 
     {
-        id: 'P0114',
+        id: 'P0115',
         name: 'Zoom',
         group: 'programms',
         fixedPayment: 'no',
@@ -288,7 +288,7 @@ let services = [
     },
 
     {
-        id: 'P0115',
+        id: 'P0116',
         name: 'Discord Nitro',
         group: 'programms',
         fixedPayment: 'no',
@@ -306,7 +306,7 @@ let services = [
     },
 
     {
-        id: 'P0116',
+        id: 'P0117',
         name: 'Adobe Photoshop',
         group: 'programms',
         fixedPayment: 'no',
@@ -324,7 +324,7 @@ let services = [
     },
 
     {
-        id: 'P0116',
+        id: 'P0118',
         name: 'Duolingo',
         group: 'programms',
         fixedPayment: 'no',

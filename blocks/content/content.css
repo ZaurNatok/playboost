@@ -128,6 +128,18 @@
     justify-content: space-between;
 }
 
+.content__service {
+    display: flex;
+}
+
+.content__first {
+    flex: 3 1;
+    max-width: 819px;
+}
+
+.content__title-logo {
+    color: #fff;
+}
 
 @media screen and (max-width: 430px) {
     .content__advantages {

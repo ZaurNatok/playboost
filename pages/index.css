@@ -6,6 +6,7 @@
 @import url('../blocks/news/news.css');
 @import url('../blocks/faq/faq.css');
 @import url('../blocks/footer.css/footer.css');
+@import url('../blocks/payment/payment.css');
 
 body {
     background-color: #06010a;

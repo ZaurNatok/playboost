@@ -46,6 +46,17 @@
     transform: rotate(180deg);
 }
 
+.faq__collapse {
+    height: 0;
+    transition: height 500ms;
+    overflow: hidden;
+}
+
+.faq__collapsed {
+    height: auto;
+    transition: height 500ms;
+}
+
 @keyframes rotation {
     0% {
         transform: rotate(180deg)

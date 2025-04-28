@@ -8,12 +8,19 @@ let findButton = document.querySelector('.banner__button_find');
 let faqSector = document.querySelector('.faq__questions');
 let faqQuestion = document.querySelector('.faq__question');
 
-// Games
-let gamesContainer = document.querySelector('.content__items_games');
-// services
-let servicesContainer = document.querySelector('.content__items_services');
-// programms
-let programmsContainer = document.querySelector('.content__items_programms');
+// Определяем id сервиса
+
+let params = new URLSearchParams(document.location.search);
+let value = params.get('id'); // 'id' – это имя целевого параметра
+let theService = services.find((element) => element.id == value);
+
+// Данные сервиса заполняем
+
+let serviceImage = document.querySelector('.payment__image');
+let serviceTitle = document.querySelector('.payment__service-title');
+
+serviceImage.setAttribute('style', `background-image:url(${theService.serviceImage})`);
+serviceTitle.textContent = theService.name;
 
 // Popup
 
@@ -77,8 +84,9 @@ document.addEventListener('click', (e) => {
                     searchResultItem.appendChild(searchResultItemTitle);
                     
                     searchResultItemImage.setAttribute('style', `background-image:url(${el.serviceImage})`);
-                    searchResultItem.setAttribute('href', `./service/index.html?id=${el.id}`)
+                    searchResultItem.setAttribute('href', `./index.html?id=${el.id}`)
                     searchResultItemTitle.textContent = el.name;
+
                 })
 
             }
@@ -150,66 +158,6 @@ document.addEventListener('click', (e) => {
     }
 })
 
-// Адаптив
-
-// if(screen.width < 430) {
-//     document.querySelector('.content__items_games').classList.remove('swiper-games');
-//     document.querySelector('.content__items_games').querySelector('.content__items').classList.add('mobile');
-// } if(screen.width > 430) {
-//     document.querySelector('.content__items_games').classList.add('swiper-games');
-
-// }
-
-// FAQ
-
-faqSector.addEventListener('click', (e) => {
-    if(e.target.classList.contains('faq__question')) {
-        e.target.querySelector('.faq__answer').classList.toggle('hidden');
-        e.target.querySelector('.faq__arrow-icon').classList.toggle('rotate');
-    }
-})
-
-// Загрузка всех сервисов
-
-createCard(services);
-
-function createCard(services) {
-
-    services.forEach(el => {
-        let serviceItemLink = document.createElement('a');
-        let serviceItem = document.createElement('div');
-        let serviceItemTitle = document.createElement('h3');
-        let serviceImage = document.createElement('div');
-    
-        serviceItemLink.classList.add('content__link');
-        serviceItemLink.setAttribute('href', `./service/index.html?id=${el.id}`);
-        serviceItem.classList.add('content__item');
-        serviceItemTitle.classList.add('content__title');
-        serviceImage.setAttribute('style', `background-image:url(${el.serviceImage})`)
-        serviceImage.classList.add('content__image');
-        serviceItemTitle.textContent = el.name;
-
-
-        if(el.group == 'games') {
-            gamesContainer.querySelector('.content__items').appendChild(serviceItemLink);
-            serviceItemLink.appendChild(serviceItem);
-            serviceItem.appendChild(serviceImage);
-            serviceItem.appendChild(serviceItemTitle);
-        } else if(el.group == 'services') {
-            servicesContainer.querySelector('.content__items').appendChild(serviceItemLink);
-            serviceItemLink.appendChild(serviceItem);
-            serviceItem.appendChild(serviceImage);
-            serviceItem.appendChild(serviceItemTitle);
-        } else if(el.group == 'programms') {
-            programmsContainer.querySelector('.content__items').appendChild(serviceItemLink);
-            serviceItemLink.appendChild(serviceItem);
-            serviceItem.appendChild(serviceImage);
-            serviceItem.appendChild(serviceItemTitle);
-        }
-    })
-
-}
-
 // Поиск
 
 function searchService(value) {
@@ -227,4 +175,3 @@ function searchService(value) {
         return searchResult;
     }
 }
-

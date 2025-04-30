@@ -14,15 +14,83 @@ let params = new URLSearchParams(document.location.search);
 let value = params.get('id'); // 'id' – это имя целевого параметра
 let theService = services.find((element) => element.id == value);
 
-console.log(theService)
+console.log(theService);
+loadServiceParameters(theService);
 
 // Данные сервиса заполняем
 
 let serviceImage = document.querySelector('.payment__image');
 let serviceTitle = document.querySelector('.payment__service-title');
+let serviceSubtitle = document.querySelector('.payment-info__text');
 
 serviceImage.setAttribute('style', `background-image:url(${theService.serviceImage})`);
 serviceTitle.textContent = theService.name;
+serviceSubtitle.textContent = theService.country;
+
+// Параметры оплаты (инпуты и пр.)
+
+function loadServiceParameters(theService) {
+    let paymentServiceParameters = document.querySelector('.payment-info__form');
+
+    theService.inputs.forEach(el => {
+        let paymentElementInput = document.createElement('div');
+        let paymentElementLabel = document.createElement('label');
+        let paymentInput = document.createElement('input');
+        let paymentInputQuestionIcon = document.createElement('div');
+
+        paymentElementInput.classList.add('payment-info__element');
+        paymentElementLabel.classList.add('payment-info__label');
+        paymentInput.classList.add('payment-info__input');
+        paymentInputQuestionIcon.classList.add('payment-info__question-icon');
+        paymentInputQuestionIcon.setAttribute('style', 'background-image: url(./img/question.png);')
+
+        paymentServiceParameters.appendChild(paymentElementInput);
+        paymentElementInput.appendChild(paymentElementLabel);
+        paymentElementInput.appendChild(paymentInput);
+        paymentElementInput.appendChild(paymentInputQuestionIcon);
+
+        paymentElementLabel.textContent = el.title;
+        paymentInput.setAttribute('placeholder', el.title + ' ' + theService.name);
+    })
+
+    // Если не ваучер - отрисовываем инпут для ввода суммы
+
+    if(theService.fixedPayment == 'no') {
+        let paymentElementInput = document.createElement('div');
+        let paymentElementLabel = document.createElement('label');
+        let paymentInput = document.createElement('input');
+        let paymentInputQuestionIcon = document.createElement('div');
+        let paymentChipsets = document.createElement('div');
+
+        paymentElementInput.classList.add('payment-info__element');
+        paymentElementLabel.classList.add('payment-info__label');
+        paymentInput.classList.add('payment-info__input');
+        paymentInputQuestionIcon.classList.add('payment-info__question-icon');
+        paymentInputQuestionIcon.setAttribute('style', 'background-image: url(./img/question.png);')
+        paymentChipsets.classList.add('payment-info__chipsets');
+
+        paymentServiceParameters.appendChild(paymentElementInput);
+        paymentElementInput.appendChild(paymentElementLabel);
+        paymentElementInput.appendChild(paymentInput);
+        paymentElementInput.appendChild(paymentInputQuestionIcon);
+        paymentElementInput.appendChild(paymentChipsets);
+
+        chipsets.forEach(el => {
+            let paymentChipset = document.createElement('div');
+            paymentChipset.textContent = formatSum(el) + ' ' + '₽';
+            paymentChipset.classList.add('payment-info__chipset');
+            paymentChipsets.appendChild(paymentChipset);
+        });
+
+        paymentElementLabel.textContent = 'Сумма пополнения';
+        paymentInput.setAttribute('placeholder', 'Введите сумму');
+
+        paymentChipsets.addEventListener('click', function(e) {
+            paymentInput.value = e.target.textContent.slice(0, -2);
+            console.log(e.target.textContent.slice(0, -2));
+        })
+    }
+}
 
 // Popup
 
@@ -178,4 +246,10 @@ function searchService(value) {
     } else {
         return searchResult;
     }
+}
+
+// формат сумм на порядки
+
+function formatSum(sum) {
+    return sum.toLocaleString();
 }

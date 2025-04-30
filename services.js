@@ -1,6 +1,30 @@
 let services = [
     {
         id: 'P0101',
+        name: 'Тестовый',
+        group: 'games',
+        fixedPayment: 'no',
+        country: 'Пополнение международных аккаунтов стран СНГ и Турции. Пополнение осуществляется в срок до 2 часов',
+        isPopular: true,
+        serviceImage: './img/test.jpg',
+        inputs: [
+            {
+                "name": "account",
+                "required": true,
+                "title": "Введите аккаунт",
+                "regexp": "^\\d{1,3}$"
+            },
+            {
+                "name": "account",
+                "required": true,
+                "title": "Введите UID",
+                "regexp": "^\\d{1,3}$"
+            }
+        ]
+    },
+
+    {
+        id: 'P1101',
         name: 'Steam',
         group: 'services',
         fixedPayment: 'no',

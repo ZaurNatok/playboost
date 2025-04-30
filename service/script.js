@@ -356,7 +356,7 @@ function paymentAmountAndCashbacks() {
 
 window.onscroll = function() {
 
-if (screen.width < 430) {
+if (screen.width < 431) {
     window.onscroll = function() {
         let intro = window.document.getElementById("summary-block").offsetTop;
         let fixed = document.querySelector(".sticky-element");

@@ -54,6 +54,10 @@ body {
     display: none;
 }
 
+.lighted {
+    color: #b887df;
+}
+
 @media screen and (max-width: 430px) {
     .page {
         overflow: hidden;

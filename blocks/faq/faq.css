@@ -57,6 +57,14 @@
     transition: height 500ms;
 }
 
+@media screen and (max-width: 430px) { 
+
+    .faq__title {
+        max-width: 260px;
+    }
+
+}
+
 @keyframes rotation {
     0% {
         transform: rotate(180deg)

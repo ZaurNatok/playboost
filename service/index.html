@@ -33,13 +33,12 @@
 
 
 <!-- Сектор TOP -->
+<main class="page">
 
-<section class="topline">
+<section class="topline" style="max-width: 1440px; margin: auto;">
     <a href="../index.html" class="topline__logo play-bold">Play</br>Boost</a>
     <div class="topline__search-icon" style="background-image:url(../img/search.png)"></div> 
 </section>
-
-<main class="container">
 
 <!-- Content -->
 
@@ -63,19 +62,132 @@
             <p class="payment-info__text play-regular">Международная</p>
         </div>
 
+        <form class="payment-info__form play-regular" action="">
+
+            <div class="payment-info__element">
+                <label for="login" class="payment-info__label">Логин в Steam</label>
+                <input type="text" class="payment-info__input" placeholder="Введите логин в Steam">
+                <div class="payment-info__question-icon" style="background-image: url(./img/question.png);"></div>
+            </div>
+
+            <div class="payment-info__element">
+                <label for="login" class="payment-info__label">Сумма пополнения</label>
+                <input type="text" class="payment-info__input" placeholder="Введите сумму">
+                <div class="payment-info__chipsets">
+                    <div class="payment-info__chipset">500 ₽</div>
+                    <div class="payment-info__chipset">1 000 ₽</div>
+                    <div class="payment-info__chipset">2 000 ₽</div>
+                    <div class="payment-info__chipset">3 000 ₽</div>
+                    <div class="payment-info__chipset">5 000 ₽</div>
+                    <div class="payment-info__chipset">10 000 ₽</div>
+                </div>
+                <div class="payment-info__question-icon" style="background-image: url(./img/question.png);"></div>
+            </div>
+
+            <div class="payment-info__element">
+                <label for="login" class="payment-info__label">Email для получения чека</label>
+                <input type="text" class="payment-info__input" placeholder="Введите email">
+            </div>
+
+            <div class="payment-info__element">
+                <label for="login" class="payment-info__label">Промокод</label>
+                <input type="text" class="payment-info__input" placeholder="Введите промокод">
+            </div>
+
+        </form>
+
     </div>
 
+    <div class="payment-info__parametres payment-info__financial play-regular">
+        <div class="content-block content-block_pay">
+            <h2 class="content-block__title">Способ пополнения</h2>
+            <div class="content-block__information">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                <p class="information play-regular">Перед оплатой обязательно ознакомьтесь с разделом «Частые вопросы» ниже</p>
+            </div>
+            <div class="pay-info">
+               <!-- <div class="pay-info__payment-methods"> -->
 
+                <fieldset class="pay-info__payment-methods">
+                    <div class="pay-info__payment-method">
+                        <div class="payment-method__select">
+                            <input type="radio" id="sbp" class="pay-info__checkbox" name="method" checked="">
+                            <label for="sbp" class="payment-label-method">
+                                <p class="method-title">СБП (Система быстрых платежей)</p>
+                                <img src="../img/sbp.png" alt="sbp" class="payment-method__icon">
+                            </label>
+                        </div>
+                        
+                    </div>
 
-    <div class="payment-info__parametres payment-info__financial">
+                    <div class="pay-info__payment-method">
+                        <div class="payment-method__select">
+                            <input type="radio" id="cards" class="pay-info__checkbox" name="method">
+                            <label for="cards" class="payment-label-method">
+                                <p class="method-title">Картой МИР, Visa, MasterCard</p>
+                                <img src="../img/cards.png" alt="sbp" class="payment-method__icon">
+                            </label>
+                        </div>
+                    </div>
 
+                    <div class="pay-info__payment-method">
+                        <div class="payment-method__select">
+                            <input type="radio" id="cybercard" class="pay-info__checkbox cybercard" name="method">
+                            <label for="cybercard" class="payment-label-method">
+                                <p class="method-title">Киберкарта</br> <span class="lighted">(без комиссии с кешбэком)</span></p>
+                                <img src="../img/cybercard.png" alt="cyber" class="payment-method__icon cyber">
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+               
+               
+               <div class="payment-details">
+                    <div class="pay-details__item">
+                        <h3 class="pay-info__type play-bold">Сумма пополнения</h3>
+                        <p class="pay-info__pay-type play-bold"><span class="topup-sum">0</span> ₽</p>
+                    </div>
+                    <div class="pay-details__item">
+                        <h3 class="pay-info__type play-bold">Сумма зачисления</h3>
+                        <p class="pay-info__pay-type pay-info__pay-type_sum play-bold">0 <span class="currency">KZT</span></p>
+                    </div>
+                    <div class="pay-details__item">
+                        <h3 class="pay-info__type play-regular">Комиссия сервиса</h3>
+                        <p class="pay-info__pay-type payment-comission play-regular">50 ₽</p>
+                    </div>
+                    <div class="pay-details__item">
+                        <h3 class="pay-info__type play-regular">Скидка по промокоду</h3>
+                        <p class="pay-info__pay-type promocode-sum play-regular">0 ₽</p>
+                    </div>
+                    <div class="pay-details__item">
+                        <h3 class="pay-info__type play-regular">Кэшбек</h3>
+                        <p class="pay-info__pay-type cashback-sum play-regular">0 ₽</p>
+                    </div>
+               </div>
+
+                <div class="pay-details__item summary-block">
+                    <h3 class="pay-info__type play-regular summary">Итого</h3>
+                    <p class="pay-info__pay-type pay-info__pay-type_result summary"></p>
+                    <!-- <span class="loader hidden"></span> -->
+                </div>
+                <!-- <div id="sticky-component" class="hidden sticky-component">
+                    <form>
+                        <button class="pay play-bold">Оплатить</button>
+                     </form>
+                </div> -->
+            </div>
+            <form>
+                <button class="pay play-bold" id="theElement">Оплатить</button>
+             </form>
+             <p class="paymentAgreement play-regular">Нажимая кнопку “Оплатить” я соглашаюсь с условиями сервиса и политикой конфиденциальности</p>
+        </div>
     </div>
 </section>
 
 
 <!-- FAQ -->
 
-<div class="faq">
+<div class="faq faq__service">
     <h3 class="play-bold content__sector-title">Вопросы и ответы</h3>
     <div class="faq__questions">
 
@@ -125,7 +237,7 @@
 <!-- Footer -->
 
 <footer class="footer">
-    <h2 class="footer__logo">PLAYBOOST</h2>
+    <h2 class="footer__logo play-bold">PLAYBOOST</h2>
     <div class="footer__right">
 
         <div class="footer__social">

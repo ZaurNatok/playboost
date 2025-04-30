@@ -14,6 +14,8 @@ let params = new URLSearchParams(document.location.search);
 let value = params.get('id'); // 'id' – это имя целевого параметра
 let theService = services.find((element) => element.id == value);
 
+console.log(theService)
+
 // Данные сервиса заполняем
 
 let serviceImage = document.querySelector('.payment__image');

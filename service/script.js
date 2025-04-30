@@ -15,6 +15,8 @@ let paymentSum = document.querySelector('.topup-sum');
 let paymentComission = document.querySelector('.payment-comission');
 let cashback = document.querySelector('.cashback-sum');
 let finalSum = document.querySelector('.summary');
+let finalSumMobileSticky = document.querySelector('.summary-mobile');
+
 
 let comission = 50;
 let cyberCashback = 0.05;
@@ -101,6 +103,7 @@ function loadServiceParameters(theService) {
         paymentElementLabel.textContent = 'Сумма пополнения';
         paymentInput.setAttribute('type', 'number');
         paymentInput.setAttribute('placeholder', 'Введите сумму');
+        paymentInput.setAttribute('value', '300');
 
         paymentChipsets.addEventListener('click', function(e) {
             let chipsetId = e.target.querySelector('.chipset-id').textContent;
@@ -345,5 +348,20 @@ function paymentAmountAndCashbacks() {
     paymentSum.textContent = formatSum(thePaymentDetails.amount) + ' ' + '₽';
     paymentComission.textContent = formatSum(thePaymentDetails.comission) + ' ' + '₽';
     cashback.textContent = formatSum(thePaymentDetails.cashback) + ' ' + '₽';
-    finalSum.textContent = formatSum(Number(thePaymentDetails.amount) + Number(thePaymentDetails.comission) - Number(thePaymentDetails.promoCode)) + ' ' + '₽'
+    finalSum.textContent = formatSum(Number(thePaymentDetails.amount) + Number(thePaymentDetails.comission) - Number(thePaymentDetails.promoCode)) + ' ' + '₽';
+    finalSumMobileSticky.textContent = formatSum(Number(thePaymentDetails.amount) + Number(thePaymentDetails.comission) - Number(thePaymentDetails.promoCode)) + ' ' + '₽';
 }
+
+// мобильная оплата при скролле
+
+window.onscroll = function() {
+    let intro = window.document.getElementById("summary-block").offsetTop;
+    let fixed = document.querySelector(".sticky-element");
+    let scrolled = window.pageYOffset;
+
+    if(scrolled < intro) {
+        fixed.style = 'display: block';
+    } else {
+        fixed.style = 'display: none';
+    }
+};

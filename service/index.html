@@ -14,6 +14,7 @@
     <link rel="icon" href="../favicon.ico" type="image/ico">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Play:wght@400;700&family=Unbounded:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="../favicon.ico" type="image/ico">
     <title>PayBoost</title>
 </head>
 <body>
@@ -27,10 +28,21 @@
             </div>
             <div class="popup__content"></div>            
         </div>
-        
     </div>
 
+    <!-- pay for mobile -->
 
+    <div class="sticky-element">
+        <div class="pay-details__item summary-block">
+            <h3 class="pay-info__type pay-info__type_title play-regular">Итого</h3>
+            <p class="pay-info__pay-type pay-info__pay-type_result summary-mobile play-bold"></p>
+        </div>
+
+        <form>
+        <button class="pay play-bold" id="theElement">Оплатить</button>
+        </form>
+        <p class="paymentAgreement play-regular">Нажимая кнопку “Оплатить” я соглашаюсь с условиями сервиса и политикой конфиденциальности</p>
+    </div>
 
 <!-- Сектор TOP -->
 <main class="page">
@@ -168,22 +180,15 @@
                 <div class="pay-details__item summary-block">
                     <h3 class="pay-info__type pay-info__type_title play-regular">Итого</h3>
                     <p class="pay-info__pay-type pay-info__pay-type_result summary"></p>
-                    <!-- <span class="loader hidden"></span> -->
                 </div>
-                <!-- <div id="sticky-component" class="hidden sticky-component">
-                    <form>
-                        <button class="pay play-bold">Оплатить</button>
-                     </form>
-                </div> -->
             </div>
             <form>
                 <button class="pay play-bold" id="theElement">Оплатить</button>
-             </form>
-             <p class="paymentAgreement play-regular">Нажимая кнопку “Оплатить” я соглашаюсь с условиями сервиса и политикой конфиденциальности</p>
+            </form>
+            <p class="paymentAgreement play-regular" id="summary-block">Нажимая кнопку “Оплатить” я соглашаюсь с условиями сервиса и политикой конфиденциальности</p>
         </div>
     </div>
 </section>
-
 
 <!-- FAQ -->
 

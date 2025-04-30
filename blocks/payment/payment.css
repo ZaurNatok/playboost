@@ -287,7 +287,7 @@
     margin-bottom: 20px;
 }
 
-.summary {
+.summary, .summary-mobile {
     font-size: 22px;
 }
 
@@ -313,6 +313,10 @@
     font-size: 14px;
     text-align: center;
     color: #fff;
+}
+
+.sticky-element {
+    display: none;
 }
 
 @media screen and (max-width: 430px) {
@@ -361,5 +365,14 @@
 
     .method-title {
         max-width: 153px;
+    }
+
+    .sticky-element {
+        display: block;
+        padding: 20px 36px;
+        position: fixed;
+        bottom: 0;
+        background-color: #1f1b23;
+        z-index: 1;
     }
 }

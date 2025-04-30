@@ -7,6 +7,17 @@ let popupContent = document.querySelector('.popup__content');
 let findButton = document.querySelector('.banner__button_find');
 let faqSector = document.querySelector('.faq__questions');
 let faqQuestion = document.querySelector('.faq__question');
+let paymentMethods = document.querySelector('.pay-info__payment-methods');
+let cyberCard = document.querySelector('.cybercard');
+let cyberIcon = document.querySelector('.cyber');
+
+let paymentSum = document.querySelector('.topup-sum');
+let paymentComission = document.querySelector('.payment-comission');
+let cashback = document.querySelector('.cashback-sum');
+let finalSum = document.querySelector('.summary');
+
+let comission = 50;
+let cyberCashback = 0.05;
 
 // Определяем id сервиса
 
@@ -65,6 +76,7 @@ function loadServiceParameters(theService) {
         paymentElementInput.classList.add('payment-info__element');
         paymentElementLabel.classList.add('payment-info__label');
         paymentInput.classList.add('payment-info__input');
+        paymentInput.classList.add('payment-sum');
         paymentInputQuestionIcon.classList.add('payment-info__question-icon');
         paymentInputQuestionIcon.setAttribute('style', 'background-image: url(./img/question.png);')
         paymentChipsets.classList.add('payment-info__chipsets');
@@ -94,7 +106,12 @@ function loadServiceParameters(theService) {
             let chipsetId = e.target.querySelector('.chipset-id').textContent;
             let chipset = chipsets.find((element) => element.id == chipsetId);
             paymentInput.value = chipset.value;
+            paymentAmountAndCashbacks();
         })
+
+        paymentInput.addEventListener('input', () => {
+            paymentAmountAndCashbacks();
+        } )
     }
 }
 
@@ -268,3 +285,65 @@ faqSector.addEventListener('click', (e) => {
         e.target.querySelector('.faq__arrow-icon').classList.toggle('rotate');
     }
 })
+
+// Если выбрал киберкарту
+
+function ifCyberCard() {
+    if(cyberCard.checked) {
+        cyberIcon.setAttribute('src', '../img/cybercard_chosen.png');
+        return true;
+    } else {
+        cyberIcon.setAttribute('src', '../img/cybercard.png');
+        return false;
+    }
+}
+
+
+paymentMethods.addEventListener('click', function(){
+    ifCyberCard();
+    paymentAmountAndCashbacks();
+    
+    // if(cyberCard.checked) {
+    //     comission = 0;
+    //     paymentComission.textContent = 0 + ' ' + '₽';
+    //     let paymentAmount = document.querySelector('.summary');
+    //     finalSum.textContent = Number(paymentAmount.value) + Number(comission).toLocaleString() + ' ' + '₽';
+    // } else {
+    //     comission = 50;
+    //     paymentComission.textContent = 50 + ' ' + '₽';
+    //     finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
+    // }
+});
+
+// расчет суммы к оплате, к зачислению, скидок и кэшбеков
+paymentAmountAndCashbacks();
+
+function paymentAmountAndCashbacks() {
+    let thePaymentDetails = {
+        amount: document.querySelector('.payment-sum').value,
+        comission: comission,
+        cashback: 0,
+        promoCode: 0
+    }
+
+    if(ifCyberCard() == true) {
+        thePaymentDetails = {
+            amount: document.querySelector('.payment-sum').value,
+            comission: 0,
+            cashback: document.querySelector('.payment-sum').value * cyberCashback,
+            promoCode: 0
+        }
+    } else {
+        thePaymentDetails = {
+            amount: document.querySelector('.payment-sum').value,
+            comission: comission,
+            cashback: document.querySelector('.payment-sum').value * 0,
+            promoCode: 0
+        }
+    }
+
+    paymentSum.textContent = formatSum(thePaymentDetails.amount) + ' ' + '₽';
+    paymentComission.textContent = formatSum(thePaymentDetails.comission) + ' ' + '₽';
+    cashback.textContent = formatSum(thePaymentDetails.cashback) + ' ' + '₽';
+    finalSum.textContent = formatSum(Number(thePaymentDetails.amount) + Number(thePaymentDetails.comission) - Number(thePaymentDetails.promoCode)) + ' ' + '₽'
+}

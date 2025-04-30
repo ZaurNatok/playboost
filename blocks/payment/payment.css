@@ -291,6 +291,10 @@
     font-size: 22px;
 }
 
+.pay-info__type_title {
+    font-size: 22px;
+}
+
 .pay {
     height: 50px;
     background: rgb(111, 58, 243);

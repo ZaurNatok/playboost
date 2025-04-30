@@ -152,16 +152,6 @@ document.addEventListener('click', (e) => {
     }
 })
 
-// Адаптив
-
-// if(screen.width < 430) {
-//     document.querySelector('.content__items_games').classList.remove('swiper-games');
-//     document.querySelector('.content__items_games').querySelector('.content__items').classList.add('mobile');
-// } if(screen.width > 430) {
-//     document.querySelector('.content__items_games').classList.add('swiper-games');
-
-// }
-
 // FAQ
 
 faqSector.addEventListener('click', (e) => {

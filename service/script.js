@@ -355,13 +355,18 @@ function paymentAmountAndCashbacks() {
 // мобильная оплата при скролле
 
 window.onscroll = function() {
-    let intro = window.document.getElementById("summary-block").offsetTop;
-    let fixed = document.querySelector(".sticky-element");
-    let scrolled = window.pageYOffset;
 
-    if(scrolled < intro) {
-        fixed.style = 'display: block';
-    } else {
-        fixed.style = 'display: none';
-    }
-};
+if (screen.width < 430) {
+    window.onscroll = function() {
+        let intro = window.document.getElementById("summary-block").offsetTop;
+        let fixed = document.querySelector(".sticky-element");
+        let scrolled = window.pageYOffset;
+    
+        if(scrolled < intro) {
+            fixed.style = 'display: block';
+        } else {
+            fixed.style = 'display: none';
+        }
+    };
+ }
+}

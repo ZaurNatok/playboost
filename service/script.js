@@ -259,3 +259,12 @@ function searchService(value) {
 function formatSum(sum) {
     return sum.toLocaleString();
 }
+
+// FAQ
+
+faqSector.addEventListener('click', (e) => {
+    if(e.target.classList.contains('faq__question')) {
+        e.target.querySelector('.faq__answer').classList.toggle('hidden');
+        e.target.querySelector('.faq__arrow-icon').classList.toggle('rotate');
+    }
+})

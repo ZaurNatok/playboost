@@ -136,6 +136,10 @@
     cursor: pointer;
 }
 
+.chipset-id {
+    display: none;
+}
+
 .payment-info__chipset_chosen {
     border: solid 1px #fff;
 }

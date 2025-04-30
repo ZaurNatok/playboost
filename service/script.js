@@ -77,17 +77,23 @@ function loadServiceParameters(theService) {
 
         chipsets.forEach(el => {
             let paymentChipset = document.createElement('div');
-            paymentChipset.textContent = formatSum(el) + ' ' + '₽';
+            let paymentChipsetId = document.createElement('span');
+            paymentChipset.textContent = formatSum(el.value) + ' ' + '₽';
+            paymentChipsetId.classList.add('chipset-id')
             paymentChipset.classList.add('payment-info__chipset');
             paymentChipsets.appendChild(paymentChipset);
+            paymentChipset.appendChild(paymentChipsetId);
+            paymentChipsetId.textContent = el.id;
         });
 
         paymentElementLabel.textContent = 'Сумма пополнения';
+        paymentInput.setAttribute('type', 'number');
         paymentInput.setAttribute('placeholder', 'Введите сумму');
 
         paymentChipsets.addEventListener('click', function(e) {
-            paymentInput.value = e.target.textContent.slice(0, -2);
-            console.log(e.target.textContent.slice(0, -2));
+            let chipsetId = e.target.querySelector('.chipset-id').textContent;
+            let chipset = chipsets.find((element) => element.id == chipsetId);
+            paymentInput.value = chipset.value;
         })
     }
 }

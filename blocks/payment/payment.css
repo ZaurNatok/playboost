@@ -84,7 +84,7 @@
     position: sticky;
     top: 10px;
     margin-left: 30px;
-    max-width: 544px;
+    max-width: 480px;
 }
 
 .payment-info__element {
@@ -142,7 +142,7 @@
 .faq__service {
     max-width: 1440px;
     margin: auto;
-    padding: 0 32px;
+    padding: 0 20px;
 }
 
 .payment-info__question-icon {
@@ -244,7 +244,6 @@
 .method-title {
     cursor: pointer;
     margin: 0 0 0 12px;
-    max-width: 153px;
 }
 
 .payment-method__icon {
@@ -345,5 +344,9 @@
 
     .payment-method__select {
         justify-content: space-between;
+    }
+
+    .method-title {
+        max-width: 153px;
     }
 }

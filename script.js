@@ -50,6 +50,8 @@ document.addEventListener('click', (e) => {
         searchArea.appendChild(searchInput);
         popupContent.appendChild(searchResult);
 
+        searchInput.focus();
+
         // Поиск
 
         searchInput.addEventListener('input', () => {

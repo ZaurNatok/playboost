@@ -10,6 +10,8 @@ let faqQuestion = document.querySelector('.faq__question');
 let paymentMethods = document.querySelector('.pay-info__payment-methods');
 let cyberCard = document.querySelector('.cybercard');
 let cyberIcon = document.querySelector('.cyber');
+let loaderPopup = popup.querySelector('.loader');
+let currency = document.querySelector('.currency');
 
 let paymentSum = document.querySelector('.topup-sum');
 let paymentComission = document.querySelector('.payment-comission');
@@ -369,4 +371,42 @@ if (screen.width < 431) {
         }
     };
  }
+}
+
+// запрос check для получения курса
+
+getCurrencyRate();
+
+function getCurrencyRate() {
+    fetch('https://api.payforsteam.ru/check', { 
+        method: 'POST', 
+        headers: { 
+            'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify({
+            'serviceId': 'P0101',
+            'account': '0',
+            'agentTransactionId': '111',
+            'agentTransactionDate': '2025-01-23T20:41:13',
+            'amountTo': 500.00,
+            'amountFrom': 500.00
+    })})
+    .then(res => {
+        return res.json()
+    })
+    .then(res => setLocalStorage(res))
+    .catch(err => console.log({ err }))
+}
+
+function setLocalStorage(res) {
+    if(res.result == 220) {
+        popup.classList.remove('hidden');
+        loaderPopup.classList.add('hidden');
+        popupInfo.textContent = `Произошла ошибка. Мы уже знаем об этом и работаем над ее устранением. Пожалуйста, повторите попытку позже`;
+        return;
+    } else {
+        localStorage.setItem('currencyRate', res.rate);
+        localStorage.setItem('currency', res.currency);
+        currency.textContent = localStorage.getItem('currency');
+    }
 }

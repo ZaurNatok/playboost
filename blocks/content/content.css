@@ -141,6 +141,24 @@
     color: #fff;
 }
 
+.loader {
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    border: solid 2px;
+    border-color: #444 #444 #444 #009fdf;
+    animation: spin .75s linear infinite;
+    align-items: center;
+    display: flex;
+    margin: auto;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(1turn);
+    }
+}
+
 @media screen and (max-width: 430px) {
     .content__advantages {
         flex-direction: column;

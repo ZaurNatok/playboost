@@ -12,6 +12,11 @@ let cyberCard = document.querySelector('.cybercard');
 let cyberIcon = document.querySelector('.cyber');
 let loaderPopup = popup.querySelector('.loader');
 let currency = document.querySelector('.currency');
+let payButtonDesktop = document.querySelector('.pay_desktop');
+let payButtonMobile = document.querySelector('.pay_mobile');
+let paymentServiceParameters = document.querySelector('.payment-info__form');
+let popupInfo = document.querySelector('.popup__content');
+let payAfterCheck = popup.querySelector('.payAfterCheck');
 
 let paymentSum = document.querySelector('.topup-sum');
 let paymentComission = document.querySelector('.payment-comission');
@@ -19,9 +24,10 @@ let cashback = document.querySelector('.cashback-sum');
 let finalSum = document.querySelector('.summary');
 let finalSumMobileSticky = document.querySelector('.summary-mobile');
 
-
 let comission = 50;
 let cyberCashback = 0.05;
+let sumToPay = 0;
+let sumToPopup = 0;
 
 // Определяем id сервиса
 
@@ -29,8 +35,20 @@ let params = new URLSearchParams(document.location.search);
 let value = params.get('id'); // 'id' – это имя целевого параметра
 let theService = services.find((element) => element.id == value);
 
-console.log(theService);
 loadServiceParameters(theService);
+
+// Запрос всех доступных сервисов
+
+// fetch('https://api.payforsteam.ru/services', { 
+//     method: 'POST', 
+//     headers: { 
+//         'Content-Type': 'application/json'
+//      }})
+// .then(res => {
+//     return res.json()
+//   })
+//   .then(res => console.log(res)) // отправляется ответ на клиент
+//   .catch(err => console.log({ err }))
 
 // Данные сервиса заполняем
 
@@ -45,23 +63,26 @@ serviceSubtitle.textContent = theService.country;
 // Параметры оплаты (инпуты и пр.)
 
 function loadServiceParameters(theService) {
-    let paymentServiceParameters = document.querySelector('.payment-info__form');
-
+    
     theService.inputs.forEach(el => {
         let paymentElementInput = document.createElement('div');
         let paymentElementLabel = document.createElement('label');
         let paymentInput = document.createElement('input');
+        let paymentInputError = document.createElement('p');
         let paymentInputQuestionIcon = document.createElement('div');
 
         paymentElementInput.classList.add('payment-info__element');
         paymentElementLabel.classList.add('payment-info__label');
         paymentInput.classList.add('payment-info__input');
+        paymentInput.setAttribute('name', el.name)
+        paymentInputError.classList.add('error')
         paymentInputQuestionIcon.classList.add('payment-info__question-icon');
         paymentInputQuestionIcon.setAttribute('style', 'background-image: url(./img/question.png);')
 
         paymentServiceParameters.appendChild(paymentElementInput);
         paymentElementInput.appendChild(paymentElementLabel);
         paymentElementInput.appendChild(paymentInput);
+        paymentElementInput.appendChild(paymentInputError);
         paymentElementInput.appendChild(paymentInputQuestionIcon);
 
         paymentElementLabel.textContent = el.title;
@@ -74,6 +95,7 @@ function loadServiceParameters(theService) {
         let paymentElementInput = document.createElement('div');
         let paymentElementLabel = document.createElement('label');
         let paymentInput = document.createElement('input');
+        let paymentInputError = document.createElement('p');
         let paymentInputQuestionIcon = document.createElement('div');
         let paymentChipsets = document.createElement('div');
 
@@ -81,6 +103,8 @@ function loadServiceParameters(theService) {
         paymentElementLabel.classList.add('payment-info__label');
         paymentInput.classList.add('payment-info__input');
         paymentInput.classList.add('payment-sum');
+        paymentInput.setAttribute('name', 'sumToPay');
+        paymentInputError.classList.add('error')
         paymentInputQuestionIcon.classList.add('payment-info__question-icon');
         paymentInputQuestionIcon.setAttribute('style', 'background-image: url(./img/question.png);')
         paymentChipsets.classList.add('payment-info__chipsets');
@@ -88,6 +112,7 @@ function loadServiceParameters(theService) {
         paymentServiceParameters.appendChild(paymentElementInput);
         paymentElementInput.appendChild(paymentElementLabel);
         paymentElementInput.appendChild(paymentInput);
+        paymentElementInput.appendChild(paymentInputError);
         paymentElementInput.appendChild(paymentInputQuestionIcon);
         paymentElementInput.appendChild(paymentChipsets);
 
@@ -307,17 +332,6 @@ function ifCyberCard() {
 paymentMethods.addEventListener('click', function(){
     ifCyberCard();
     paymentAmountAndCashbacks();
-    
-    // if(cyberCard.checked) {
-    //     comission = 0;
-    //     paymentComission.textContent = 0 + ' ' + '₽';
-    //     let paymentAmount = document.querySelector('.summary');
-    //     finalSum.textContent = Number(paymentAmount.value) + Number(comission).toLocaleString() + ' ' + '₽';
-    // } else {
-    //     comission = 50;
-    //     paymentComission.textContent = 50 + ' ' + '₽';
-    //     finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
-    // }
 });
 
 // расчет суммы к оплате, к зачислению, скидок и кэшбеков
@@ -409,4 +423,714 @@ function setLocalStorage(res) {
         localStorage.setItem('currency', res.currency);
         currency.textContent = localStorage.getItem('currency');
     }
+}
+
+// Нажатие кнопки "Оплатить"
+
+payButtonDesktop.addEventListener('click', function(e) {
+    e.preventDefault()
+    
+    if(cyberCard.checked) {
+        comission = 0;
+    }
+
+    let result = checkInputs();
+    if(result == 'error') {
+        return;
+    } else if(result == 'ok') {
+
+        let theForm = document.forms.paymentParams;
+        console.log(theForm.elements)
+        payButtonDesktop.removeAttribute('disabled');
+        let agentTransactionId = generatetransactionId();
+        
+        sumToPay = theForm.elements.sumToPay.value;
+
+        let dateTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
+        popup.classList.remove('hidden');
+        loaderPopup.classList.remove('hidden');
+
+            fetch('https://api.payforsteam.ru/check', { 
+                method: 'POST', 
+                headers: { 
+                    'Content-Type': 'application/json'
+                }, 
+                body: JSON.stringify({
+                    'serviceId': value,
+                    'account': theForm.elements.account.value,
+                    'agentTransactionId': agentTransactionId,
+                    'agentTransactionDate': dateTime,
+                    'amountTo': Number(sumToPay),
+                    'amountFrom': Number(sumToPay) + comission
+            })})
+            .then(res => {
+                return res.json()
+            })
+            .then(res => resultOrcestrator(res.result, agentTransactionId, res, dateTime, theForm.elements.account.value))
+                // параметры сервиса - ответ от сервера
+            .catch(err => console.log({ err }))
+
+            let thePayment = {
+                'serviceId': value,
+                'account': theForm.elements.account.value,
+                'agentTransactionId': agentTransactionId,
+                'agentTransactionDate': dateTime,
+                'amountTo': Number(sumToPay),
+                'amountFrom': Number(sumToPay) + comission
+            }
+
+        popup.addEventListener('click', (e) => {
+            if(e.target.classList.contains('close') || e.target.classList.contains('popup__wrapper')) {
+                popup.classList.add('hidden');
+                popupIcon.classList.add('hidden');
+                popupInfo.textContent = '';
+                location.reload()
+            }
+        })
+    }
+})
+
+// Обработка ответа от сервера Партнера
+
+function resultOrcestrator(result, agentTransactionId, res, dateTime, acc) {
+
+    // Добавляем запись в базу
+    
+    if(cyberCard.checked) {
+        comission = 0;
+    }
+    
+        fetch('https://api.payforsteam.ru/newpayment', { 
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            }, 
+            body: JSON.stringify({
+                'agentTransactionId': res.agentTransactionId,
+                'transactionId': res.transactionId,
+                'date': dateFormat(),
+                'time': timeFormat(),
+                'serviceId': value,
+                'serviceName': theService.name,
+                'sumFrom': Number(sumToPay),
+                'sumTo': ((Number(sumToPay) - Number(sumToPay) * 0.035) * localStorage.getItem('currencyRate')).toFixed(2),
+                'sumCurrency': localStorage.getItem('currency'),
+                'comissionPercentage': 3.5,
+                'comissionFee': comission,
+                'statusBank': 'В процессе',
+                'statusPartner': 'Запрос check ' + res.resultMessage,
+                'clientAccountId': acc
+        })})
+        .then(res => {
+            return res.json()
+        })
+        .then(res => res)
+        .catch(err => console.log({ err }))
+    
+    // Обработка ответа от сервера
+    
+        if(result == 300) {
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
+        } if(result == 0) {
+    
+            let order = {
+                // "TerminalKey": "1574412702003DEMO",
+                "Amount": (Number(sumToPay) + 50) * 100,
+                "OrderId": res.agentTransactionId,
+                "Description": "Оплата покупки",
+            }
+    
+            startSBP(order, agentTransactionId, dateTime);
+    
+        } if(result == 1) {
+            loaderPopup.classList.add('hidden');
+            popupInfo.textContent = 'Запрос в обработке, повторите запрос позже';
+        } if(result == 4) {
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/attention.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Неверный формат идентификатора абонента';
+        } if(result == 5) {
+            loaderPopup.classList.add('hidden');
+            popupInfo.textContent = 'Идентификатор не найден (проверьте номер)';
+        } if(result == 7) {
+            loaderPopup.classList.add('hidden');
+            popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
+        } if(result == 8) {
+            loaderPopup.classList.add('hidden');
+            popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
+        } if(result == 130) {
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
+        } if(result == 220) {
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Баланс закончился. Повторите попытку позже';
+        } if(result == 204) {
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Прием платежа в указанной валюте не возможен';
+        } if(result == 202) {
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Ошибка данных запроса';
+        }
+        
+    }
+
+// Формат даты 
+
+function dateFormat() {
+
+    let today = new Date();
+    let month = today.getMonth();
+    let date = today.getDate();
+
+    switch (month)
+    {
+      case 0: fMonth="01"; break;
+      case 1: fMonth="02"; break;
+      case 2: fMonth="03"; break;
+      case 3: fMonth="04"; break;
+      case 4: fMonth="05"; break;
+      case 5: fMonth="06"; break;
+      case 6: fMonth="07"; break;
+      case 7: fMonth="08"; break;
+      case 8: fMonth="09"; break;
+      case 9: fMonth="10"; break;
+      case 10: fMonth="11"; break;
+      case 11: fMonth="12"; break;
+    }
+
+    switch (date)
+    {
+      case 1: fDate="01"; break;
+      case 2: fDate="02"; break;
+      case 3: fDate="03"; break;
+      case 4: fDate="04"; break;
+      case 5: fDate="05"; break;
+      case 6: fDate="06"; break;
+      case 7: fDate="07"; break;
+      case 8: fDate="08"; break;
+      case 9: fDate="09"; break;
+    }
+
+    let theDate = today.getDate() < 10 ? '0' + today.getDate() + '.' + (fMonth) + '.' + today.getFullYear() : today.getDate() + '.' + (fMonth) + '.' + today.getFullYear();
+    return theDate;
+}
+
+function timeFormat() {
+    let today = new Date();
+    let hours = today.getHours() < 10 ? '0' + today.getHours() : today.getHours();
+    let minutes = today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes();
+    let seconds = today.getSeconds() < 10 ? '0' + today.getSeconds() : today.getSeconds();
+    let time = hours + ':' + minutes + ':' + seconds;
+    return time;
+}
+
+// валидация полей
+
+function checkInputs() {
+
+    for(let i = 0; i < paymentServiceParameters.elements.length; i++) {
+        if(paymentServiceParameters.elements[i].value == '') {
+            paymentServiceParameters.elements[i].nextElementSibling.classList.remove('hidden');
+            paymentServiceParameters.elements[i].nextElementSibling.textContent = 'Это обязательное поле';
+            return 'error';
+        } 
+        else if(paymentServiceParameters.elements[i].nextElementSibling.textContent != '') {
+            paymentServiceParameters.elements[i].nextElementSibling.textContent = '';
+            return 'ok';
+        }
+    }
+
+    if(document.querySelector('.payment-sum') && document.querySelector('.payment-sum').value < 10 || document.querySelector('.payment-sum').value > 15000) {
+        let sumInput = document.querySelector('.payment-sum');
+        sumInput.nextElementSibling.classList.remove('hidden');
+        sumInput.nextElementSibling.textContent = 'Минимальная сумма оплаты 10 рублей, максимальная 15 000 рублей';
+        return 'error';
+    }
+    return 'ok';
+}
+
+// Генерация id транзакции
+
+function generatetransactionId() {
+    const min = 1000000;
+    const max = 9999999;
+    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    let transactionId = ((new Date()).getTime()).toString().slice(1,6) + randomNum.toString();
+    return Number(transactionId);
+}
+
+
+
+
+// СБП
+
+function startSBP(order, agentTransactionId, dateTime) {
+
+    let paymentAmount = document.querySelector('.payment-sum');
+
+    if(cyberCard.checked) {
+        order.Amount = (Number(paymentAmount.value)) * 100;
+    }
+
+    fetch('https://api.payforsteam.ru/sbpInit', { 
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                "Amount": order.Amount,
+                "OrderId": order.OrderId.toString(),
+                "Description": "Оплата покупки"
+            }         
+        )})
+        .then(res => {
+            return res.json();
+        })
+        .then(res => {
+            getQR(res, agentTransactionId, dateTime);
+        })
+        .catch(err => console.log({ err })
+        );
+}
+
+function generateToken(string) {
+    const utf8 = new TextEncoder().encode(string);
+    return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray
+    .map((bytes) => bytes.toString(16).padStart(2, '0'))
+    .join('');
+    return hashHex;
+    });
+}
+
+// function sbpInit(order, agentTransactionId, dateTime) {
+//     fetch('http://localhost:3000/sbpInit', { 
+//     method: 'POST',
+//     headers: { 
+//     'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify(
+//         {
+//             "Amount": order.Amount,
+//             "OrderId": order.OrderId.toString(),
+//             "Description": "Оплата покупки",
+//             "Token": order.Token
+//         }         
+//     )})
+//     .then(res => {
+//         return res.json();
+//     })
+//     .then(res => getQR(res, agentTransactionId, dateTime))
+//     .catch(err => console.log({ err }))
+// }
+
+
+// function getQR(res, agentTransactionId, dateTime) {
+
+// let result = '';
+//     if(res.ErrorCode == 0) {
+//         let password = 'o6zmp4svjrvxg68a';
+
+//         if( screen.width <= 480 ) {
+//             let token = [{"DataType": "PAYLOAD"},{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
+                
+//             let values = [];
+//             for(let i = 0; i < token.length; i++) {
+//                 values.push(String(Object.values(token[i])))
+//             }
+//             result = values.join('');
+//         } else {
+//             let token = [{"DataType": "IMAGE"},{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
+                
+//             let values = [];
+//             for(let i = 0; i < token.length; i++) {
+//                 values.push(String(Object.values(token[i])))
+//             }
+        
+//             result = values.join('');
+//         }
+        
+//         generateToken(result).then((result) => {
+//                 localStorage.setItem('token', result);
+
+//                 if( screen.width <= 480 ) {
+//                     let theOrder = {
+//                         "TerminalKey": res.TerminalKey.toString(),
+//                         "PaymentId": res.PaymentId,
+//                         "DataType": "PAYLOAD",
+//                         "Token": result
+//                     }
+
+//                     showPayload(theOrder, agentTransactionId, dateTime);
+//                 } else {
+//                     let theOrder = {
+//                         "TerminalKey": res.TerminalKey.toString(),
+//                         "PaymentId": res.PaymentId,
+//                         "DataType": "IMAGE",
+//                         "Token": result
+//                     }
+//                     showQR(theOrder, agentTransactionId, dateTime);
+//                 }
+
+//             })
+//     } else {
+//         console.log('Ошибка запроса QR')
+//     }
+// }
+
+
+function getQR(result, agentTransactionId, dateTime) {
+
+        if(result.ErrorCode == 0) {
+    
+            if( screen.width <= 480 ) {
+
+                fetch('https://api.payforsteam.ru/generateQR', { 
+                    method: 'POST',
+                    headers: { 
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(
+                        {
+                            "DataType": "PAYLOAD",
+                            "PaymentId": result.PaymentId
+                        }         
+                    )})
+                    .then(res => {
+                        return res.text();
+                    })
+                    .then(res => {
+                        let theOrder = {
+                            "PaymentId": result.PaymentId,
+                            "DataType": "PAYLOAD",
+                            "Token": res
+                        }
+                        showPayload(theOrder, agentTransactionId, dateTime);
+                    })
+                    .catch(err => console.log({ err }));
+
+            } else {
+
+                fetch('https://api.payforsteam.ru/generateQR', { 
+                    method: 'POST',
+                    headers: { 
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(
+                        {
+                            "DataType": "IMAGE",
+                            "PaymentId": result.PaymentId
+                        }         
+                    )})
+                    .then(res => {
+                        return res.text();
+                    })
+                    .then(res => {
+                        let theOrder = {
+                            "PaymentId": result.PaymentId,
+                            "DataType": "IMAGE",
+                            "Token": res
+                        }
+                        showQR(theOrder, agentTransactionId, dateTime);
+                    })
+                    .catch(err => console.log({ err }));
+            }
+        } else {
+                loaderPopup.classList.add('hidden');
+                popupIcon.setAttribute('src', '../img/error.png')
+                popupIcon.classList.remove('hidden');
+                popupInfo.textContent = `Произошла ошибка. Мы уже знаем об этом и работаем над ее устранением. Пожалуйста, повторите попытку позже`;
+                popup.addEventListener('click', (e) => {
+                    if(e.target.classList.contains('close') || e.target.classList.contains('popup__wrapper')) {
+                        popup.classList.add('hidden');
+                        popupIcon.classList.add('hidden');
+                        popupInfo.textContent = '';
+                        location.reload()
+                    }
+                })
+            console.log('Ошибка запроса QR');
+
+                // Обновление записи в базе
+
+                fetch('https://api.payforsteam.ru/payresultSBP', { 
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    }, 
+                    body: JSON.stringify({
+                        'statusBank': "Ошибка генерации QR",
+                        'statusPartner': "Операция неуспешна",
+                        'agentTransactionId': agentTransactionId
+                })})
+                .then(res => {
+                    return res.json()
+                })
+                .then(res => res)
+                .catch(err => console.log({ err }))
+        }
+    }
+
+function showQR(res, agentTransactionId, dateTime) {
+
+    fetch('https://api.payforsteam.ru/getQr', { 
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                "PaymentId": res.PaymentId,
+                "DataType": "IMAGE",
+                "Token": res.Token
+            }         
+        )})
+        .then(res => {
+            return res.json();
+        })
+        .then(res => showQRforClient(res, agentTransactionId, dateTime)) // отправляется ответ на клиент
+        .catch(err => console.log({ err }))
+}
+
+function showPayload(res, agentTransactionId, dateTime) {
+    fetch('https://api.payforsteam.ru/getQr', { 
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                "PaymentId": res.PaymentId,
+                "DataType": "PAYLOAD",
+                "Token": res.Token
+            }         
+        )})
+        .then(res => {
+            return res.json();
+        })
+        .then(res => showQRforClient(res, agentTransactionId, dateTime)) // отправляется ответ на клиент
+        .catch(err => console.log({ err }))
+}
+
+function showQRforClient(res, agentTransactionId, dateTime) {
+
+    if(res.ErrorCode == '99' || res.ErrorCode == '3001') {
+        loaderPopup.classList.add('hidden');
+        popupIcon.setAttribute('src', '../img/error.png')
+        popupIcon.classList.remove('hidden');
+        popupInfo.textContent = `Произошла ошибка. Мы уже знаем об этом и работаем над ее устранением. Пожалуйста, повторите попытку позже`;
+        popup.addEventListener('click', (e) => {
+            if(e.target.classList.contains('close') || e.target.classList.contains('popup__wrapper')) {
+                popup.classList.add('hidden');
+                popupIcon.classList.add('hidden');
+                popupInfo.textContent = '';
+                location.reload()
+            }
+        })
+        return;
+    } else {
+        loaderPopup.classList.add('hidden');
+        popupInfo.textContent = 'Отсканируйте QR код СБП для проведения оплаты с использованием мобильного приложения Вашего банка';
+        payAfterCheck.setAttribute('style', 'width: fit-content; background-color: #fff;');
+    
+        if(screen.width <= 480 ) {
+            let paySbpButton = document.createElement('a');
+            paySbpButton.setAttribute('href', res.Data);
+            paySbpButton.classList.add('pay');
+            paySbpButton.setAttribute('style', 'padding: 10px 15px');
+            payAfterCheck.setAttribute('style', 'background: none');
+            payAfterCheck.setAttribute('style', 'width: fit-content');
+            paySbpButton.setAttribute('target', '_blank');
+            payAfterCheck.appendChild(paySbpButton);
+            paySbpButton.textContent = 'Оплатить по СБП';
+            popupInfo.textContent = '';
+        } else {
+            payAfterCheck.innerHTML = `${res.Data}`;
+        }
+        popup.classList.remove('hidden');
+        payAfterCheck.classList.remove('hidden');
+        getState(res, agentTransactionId, dateTime);
+    }
+}
+
+
+
+
+
+function getState(payment, agentTransactionId, dateTime) {
+
+let password = 'o6zmp4svjrvxg68a';
+let token = [{"Password": `${password}`},{"PaymentId": `${payment.PaymentId}`},{"TerminalKey": `${payment.TerminalKey}`}];
+
+let values = [];
+for(let i = 0; i < token.length; i++) {
+    values.push(String(Object.values(token[i])))
+}
+
+const result = values.join('');
+
+generateToken(result).then((result) => {
+    localStorage.setItem('token', result);
+
+    fetch('https://api.payforsteam.ru/getState', { 
+        method: 'POST',
+        headers: { 
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+            {
+                "TerminalKey": payment.TerminalKey.toString(),
+                "PaymentId": payment.PaymentId.toString(),
+                "Token": result
+            }         
+        )})
+        .then(res => {
+            // console.log(res);
+            return res.json();
+        })
+        .then(res => statesOrcestrator(res, agentTransactionId, dateTime, payment)) // отправляется ответ на клиент
+        .catch(err => console.log({ err }))
+    })
+}
+
+function statesOrcestrator(res, agentTransactionId, dateTime, payment) {
+
+    testPaymentSuccess(res);
+    testPaymentTimeout(res);
+    testPaymentReject(res);
+
+    if(res.ErrorCode == 0) {
+        if(res.Status == "CONFIRMED") {
+
+            pay(serviceId, agentTransactionId, dateTime);
+        
+        } if(res.Status == "NEW" || res.Status == "AUTHORIZING" || res.Status == "AUTHORIZED" || res.Status == "CONFIRMING" || res.Status == "FORM_SHOWED") {
+            console.log('Повторить запрос статуса');
+            const timerId = setTimeout(() => { getState(payment, agentTransactionId, dateTime)}, 5000)
+        } if(res.Status == "DEADLINE_EXPIRED") {
+            console.log('НЕУСПЕШНО - ТАЙМАУТ');
+            payAfterCheck.classList.add('hidden');
+            loaderPopup.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Истекло время ожидания оплаты. Повторите попытку';
+            
+            // Обновление записи в базе
+
+            fetch('https://api.payforsteam.ru/payresultSBP', { 
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                }, 
+                body: JSON.stringify({
+                    'statusBank': "Отклонен банком плательщика",
+                    'statusPartner': "Операция неуспешна",
+                    'agentTransactionId': agentTransactionId
+            })})
+            .then(res => {
+                return res.json()
+            })
+            .then(res => res)
+            .catch(err => console.log({ err }))
+
+        } if(res.Status == "REJECTED") {
+            console.log('НЕУСПЕШНО');
+            loaderPopup.classList.add('hidden');
+            payAfterCheck.classList.add('hidden');
+            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.classList.remove('hidden');
+            popupInfo.textContent = 'Банк отклонил оплату. Повторите попытку';
+
+            // Обновление записи в базе
+
+            fetch('https://api.payforsteam.ru/payresultSBP', { 
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json'
+                }, 
+                body: JSON.stringify({
+                    'statusBank': "Отклонен банком плательщика",
+                    'statusPartner': "Операция неуспешна",
+                    'agentTransactionId': agentTransactionId
+            })})
+            .then(res => {
+                return res.json()
+            })
+            .then(res => res)
+            .catch(err => console.log({ err }))
+
+        }
+    } else {
+        console.log('Запрос статуса неуспешен')
+    }
+}
+
+// Тест успех
+
+function testPaymentSuccess(res) {
+    localStorage.setItem('paymentId', res.PaymentId);
+    let password = 'o6zmp4svjrvxg68a';
+    let token = [{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
+
+    let values = [];
+    for(let i = 0; i < token.length; i++) {
+        values.push(String(Object.values(token[i])))
+    }
+
+    const result = values.join('');
+
+    generateToken(result).then((result) => {
+        localStorage.setItem('token', result);
+        })
+}
+
+// Тест таймаут
+
+function testPaymentTimeout(res) {
+    localStorage.setItem('paymentId', res.PaymentId);
+    let password = 'o6zmp4svjrvxg68a';
+    let token = [{"IsDeadlineExpired": `true`},{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
+
+    let values = [];
+    for(let i = 0; i < token.length; i++) {
+        values.push(String(Object.values(token[i])))
+    }
+
+    const result = values.join('');
+
+    generateToken(result).then((result) => {
+        localStorage.setItem('tokenDeadlineExpired', result);
+        })
+}
+
+// Тест отказ
+
+function testPaymentReject(res) {
+    localStorage.setItem('paymentId', res.PaymentId);
+    let password = 'o6zmp4svjrvxg68a';
+    let token = [{"IsRejected": `true`},{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
+
+    let values = [];
+    for(let i = 0; i < token.length; i++) {
+        values.push(String(Object.values(token[i])))
+    }
+
+    const result = values.join('');
+
+    generateToken(result).then((result) => {
+        localStorage.setItem('tokenRejected', result);
+        })
 }

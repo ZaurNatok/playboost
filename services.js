@@ -13,12 +13,6 @@ let services = [
                 "required": true,
                 "title": "Введите аккаунт",
                 "regexp": "^\\d{1,3}$"
-            },
-            {
-                "name": "account",
-                "required": true,
-                "title": "Введите UID",
-                "regexp": "^\\d{1,3}$"
             }
         ]
     },

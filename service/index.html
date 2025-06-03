@@ -27,7 +27,8 @@
                 <h3 class="popup__title play-bold"></h3>
                 <img src="../img/close.png" alt="close-icon" class="popup__close">
             </div>
-            <div class="popup__content"></div>            
+            <div class="popup__content play-bold"></div>
+            <div class="payAfterCheck hidden"></div>
         </div>
     </div>
 
@@ -40,7 +41,7 @@
         </div>
 
         <form>
-        <button class="pay play-bold" id="theElement">Оплатить</button>
+        <button class="pay pay_mobile play-bold" id="theElement">Оплатить</button>
         </form>
         <p class="paymentAgreement play-regular">Нажимая кнопку “Оплатить” я соглашаюсь с условиями сервиса и политикой конфиденциальности</p>
     </div>
@@ -75,7 +76,7 @@
             <p class="payment-info__text play-regular">Международная</p>
         </div>
 
-        <form class="payment-info__form play-regular" action="">
+        <form class="payment-info__form play-regular" action="" name="paymentParams">
 
             <!-- <div class="payment-info__element">
                 <label for="login" class="payment-info__label">Логин в Steam</label>
@@ -184,7 +185,7 @@
                 </div>
             </div>
             <form>
-                <button class="pay play-bold" id="theElement">Оплатить</button>
+                <button class="pay pay_desktop play-bold" id="theElement">Оплатить</button>
             </form>
             <p class="paymentAgreement play-regular" id="summary-block">Нажимая кнопку “Оплатить” я соглашаюсь с условиями сервиса и политикой конфиденциальности</p>
         </div>

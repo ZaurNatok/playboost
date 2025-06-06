@@ -534,13 +534,12 @@ function resultOrcestrator(result, agentTransactionId, res, dateTime, acc) {
     
         if(result == 300) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', './img/error.png')
+            popupIcon.setAttribute('src', '../img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
         } if(result == 0) {
     
             let order = {
-                // "TerminalKey": "1574412702003DEMO",
                 "Amount": (Number(sumToPay) + 50) * 100,
                 "OrderId": res.agentTransactionId,
                 "Description": "Оплата покупки",
@@ -674,7 +673,74 @@ function generatetransactionId() {
     return Number(transactionId);
 }
 
+// Оплата после проверки /check - функция
 
+function pay(serviceId, agentTransactionId, dateTime) {
+
+    let theForm = document.forms.paymentParams;
+
+    fetch('https://api.payforsteam.ru/pay', { 
+        method: 'POST', 
+        headers: { 
+            'Content-Type': 'application/json'
+        }, 
+        body: JSON.stringify({
+            'serviceId': value,
+            'account': theForm.elements.account.value,
+            'agentTransactionId': agentTransactionId,
+            'agentTransactionDate': dateTime,
+            'amountTo': (Number(sumToPay) - Number(sumToPay) * 0.035).toFixed(2),
+            'amountFrom': Number(sumToPay)
+    })})
+    .then(res => {
+        return res.json()
+    })
+    .then(res => resultPayOrcestrator(res, value, agentTransactionId, dateTime))
+     // параметры сервиса - ответ от сервера
+    .catch(err => console.log({ err }))
+}
+
+function resultPayOrcestrator(res, serviceId, agentTransactionId, dateTime) {
+    // bgForQR.classList.remove('bgWhite');
+    console.log(agentTransactionId);
+
+    if(res.result == 1) {
+        console.log('Нужно повторно направить запрос');
+        const timerId = setTimeout(() => { pay(serviceId, agentTransactionId, dateTime)}, 5000)
+        loaderPopup.classList.remove('hidden');
+        payAfterCheck.classList.add('hidden');
+        popupInfo.textContent = '';
+        popupInfo.textContent = 'Пожалуйста, подождите';
+        let popup = document.querySelector('.popup__window');
+        popup.classList.add('column');
+    }  if(res.result == 0) {
+        console.log('Успех');
+        payAfterCheck.classList.add('hidden');
+        loaderPopup.classList.add('hidden');
+        popupInfo.textContent = '';
+        popupInfo.textContent = `Оплата прошла успешно, номер транзакции ${res.transactionId}`;
+        popupIcon.setAttribute('src', './img/ok.png')
+        popupIcon.classList.remove('hidden');
+
+        // Обновление записи в базе
+
+        fetch('https://api.payforsteam.ru/payresult', { 
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json'
+            }, 
+            body: JSON.stringify({
+                'statusPartner': res.resultMessage,
+                'agentTransactionId': agentTransactionId,
+                'transactionId': res.transactionId
+        })})
+        .then(res => {
+            return res.json()
+        })
+        .then(res => res)
+        .catch(err => console.log({ err }))
+            }
+}
 
 
 // СБП
@@ -719,82 +785,6 @@ function generateToken(string) {
     return hashHex;
     });
 }
-
-// function sbpInit(order, agentTransactionId, dateTime) {
-//     fetch('http://localhost:3000/sbpInit', { 
-//     method: 'POST',
-//     headers: { 
-//     'Content-Type': 'application/json'
-//     },
-//     body: JSON.stringify(
-//         {
-//             "Amount": order.Amount,
-//             "OrderId": order.OrderId.toString(),
-//             "Description": "Оплата покупки",
-//             "Token": order.Token
-//         }         
-//     )})
-//     .then(res => {
-//         return res.json();
-//     })
-//     .then(res => getQR(res, agentTransactionId, dateTime))
-//     .catch(err => console.log({ err }))
-// }
-
-
-// function getQR(res, agentTransactionId, dateTime) {
-
-// let result = '';
-//     if(res.ErrorCode == 0) {
-//         let password = 'o6zmp4svjrvxg68a';
-
-//         if( screen.width <= 480 ) {
-//             let token = [{"DataType": "PAYLOAD"},{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
-                
-//             let values = [];
-//             for(let i = 0; i < token.length; i++) {
-//                 values.push(String(Object.values(token[i])))
-//             }
-//             result = values.join('');
-//         } else {
-//             let token = [{"DataType": "IMAGE"},{"Password": `${password}`},{"PaymentId": `${res.PaymentId}`},{"TerminalKey": `${res.TerminalKey}`}];
-                
-//             let values = [];
-//             for(let i = 0; i < token.length; i++) {
-//                 values.push(String(Object.values(token[i])))
-//             }
-        
-//             result = values.join('');
-//         }
-        
-//         generateToken(result).then((result) => {
-//                 localStorage.setItem('token', result);
-
-//                 if( screen.width <= 480 ) {
-//                     let theOrder = {
-//                         "TerminalKey": res.TerminalKey.toString(),
-//                         "PaymentId": res.PaymentId,
-//                         "DataType": "PAYLOAD",
-//                         "Token": result
-//                     }
-
-//                     showPayload(theOrder, agentTransactionId, dateTime);
-//                 } else {
-//                     let theOrder = {
-//                         "TerminalKey": res.TerminalKey.toString(),
-//                         "PaymentId": res.PaymentId,
-//                         "DataType": "IMAGE",
-//                         "Token": result
-//                     }
-//                     showQR(theOrder, agentTransactionId, dateTime);
-//                 }
-
-//             })
-//     } else {
-//         console.log('Ошибка запроса QR')
-//     }
-// }
-
 
 function getQR(result, agentTransactionId, dateTime) {
 
@@ -854,7 +844,7 @@ function getQR(result, agentTransactionId, dateTime) {
             }
         } else {
                 loaderPopup.classList.add('hidden');
-                popupIcon.setAttribute('src', '../img/error.png')
+                popupIcon.setAttribute('src', './img/error.png')
                 popupIcon.classList.remove('hidden');
                 popupInfo.textContent = `Произошла ошибка. Мы уже знаем об этом и работаем над ее устранением. Пожалуйста, повторите попытку позже`;
                 popup.addEventListener('click', (e) => {
@@ -969,10 +959,6 @@ function showQRforClient(res, agentTransactionId, dateTime) {
     }
 }
 
-
-
-
-
 function getState(payment, agentTransactionId, dateTime) {
 
 let password = 'o6zmp4svjrvxg68a';
@@ -1018,7 +1004,7 @@ function statesOrcestrator(res, agentTransactionId, dateTime, payment) {
     if(res.ErrorCode == 0) {
         if(res.Status == "CONFIRMED") {
 
-            pay(serviceId, agentTransactionId, dateTime);
+            pay(value, agentTransactionId, dateTime);
         
         } if(res.Status == "NEW" || res.Status == "AUTHORIZING" || res.Status == "AUTHORIZED" || res.Status == "CONFIRMING" || res.Status == "FORM_SHOWED") {
             console.log('Повторить запрос статуса');

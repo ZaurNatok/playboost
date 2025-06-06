@@ -5,7 +5,7 @@ let reject = document.querySelector('.button_rejected');
 document.addEventListener('click', function(e) {
     if(e.target.classList.contains('button_sussess')) {
 
-        fetch('http://localhost:3000/SbpPayTest', { 
+        fetch('https://api.payforsteam.ru/SbpPayTest', { 
             method: 'POST',
             headers: { 
             'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ document.addEventListener('click', function(e) {
   
     } if(e.target.classList.contains('button_timeout')) {
         
-        fetch('http://localhost:3000/SbpPayTest', { 
+        fetch('https://api.payforsteam.ru/SbpPayTest', { 
             method: 'POST',
             headers: { 
             'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ document.addEventListener('click', function(e) {
 
     }  if(e.target.classList.contains('button_rejected')) {
         
-        fetch('http://localhost:3000/SbpPayTest', { 
+        fetch('https://api.payforsteam.ru/aSbpPayTest', { 
             method: 'POST',
             headers: { 
             'Content-Type': 'application/json'

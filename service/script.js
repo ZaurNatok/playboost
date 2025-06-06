@@ -16,6 +16,7 @@ let payButtonDesktop = document.querySelector('.pay_desktop');
 let payButtonMobile = document.querySelector('.pay_mobile');
 let paymentServiceParameters = document.querySelector('.payment-info__form');
 let popupInfo = document.querySelector('.popup__content');
+let popupIcon = popup.querySelector('.popup__icon');
 let payAfterCheck = popup.querySelector('.payAfterCheck');
 
 let paymentSum = document.querySelector('.topup-sum');
@@ -152,10 +153,12 @@ document.addEventListener('click', (e) => {
     popupCloseButton.addEventListener('click', () => {
         popup.classList.add('hidden');
         popupContent.textContent = '';
+        location.reload()
     })
     popupWrapper.addEventListener('click', () => {
         popup.classList.add('hidden');
         popupContent.textContent = '';
+        location.reload()
     })
 
     if(e.target == searchIcon) {
@@ -531,7 +534,7 @@ function resultOrcestrator(result, agentTransactionId, res, dateTime, acc) {
     
         if(result == 300) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
         } if(result == 0) {
@@ -564,22 +567,22 @@ function resultOrcestrator(result, agentTransactionId, res, dateTime, acc) {
             popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
         } if(result == 130) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
         } if(result == 220) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Баланс закончился. Повторите попытку позже';
         } if(result == 204) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Прием платежа в указанной валюте не возможен';
         } if(result == 202) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Ошибка данных запроса';
         }
@@ -937,7 +940,7 @@ function showQRforClient(res, agentTransactionId, dateTime) {
                 popup.classList.add('hidden');
                 popupIcon.classList.add('hidden');
                 popupInfo.textContent = '';
-                location.reload()
+                location.reload();
             }
         })
         return;

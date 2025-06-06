@@ -341,6 +341,12 @@
     font-size: 18px;
 }
 
+.popup__icon {
+    display: flex;
+    width: 35px;
+    margin: 0 auto 15px;
+}
+
 @media screen and (max-width: 430px) {
     .payment {
         padding: 0 20px;

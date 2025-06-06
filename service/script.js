@@ -534,7 +534,7 @@ function resultOrcestrator(result, agentTransactionId, res, dateTime, acc) {
     
         if(result == 300) {
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Техническая ошибка на стороне провайдера. Попробуйте позже';
         } if(result == 0) {
@@ -922,7 +922,7 @@ function showQRforClient(res, agentTransactionId, dateTime) {
 
     if(res.ErrorCode == '99' || res.ErrorCode == '3001') {
         loaderPopup.classList.add('hidden');
-        popupIcon.setAttribute('src', '../img/error.png')
+        popupIcon.setAttribute('src', './img/error.png')
         popupIcon.classList.remove('hidden');
         popupInfo.textContent = `Произошла ошибка. Мы уже знаем об этом и работаем над ее устранением. Пожалуйста, повторите попытку позже`;
         popup.addEventListener('click', (e) => {
@@ -1013,7 +1013,7 @@ function statesOrcestrator(res, agentTransactionId, dateTime, payment) {
             console.log('НЕУСПЕШНО - ТАЙМАУТ');
             payAfterCheck.classList.add('hidden');
             loaderPopup.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Истекло время ожидания оплаты. Повторите попытку';
             
@@ -1039,7 +1039,7 @@ function statesOrcestrator(res, agentTransactionId, dateTime, payment) {
             console.log('НЕУСПЕШНО');
             loaderPopup.classList.add('hidden');
             payAfterCheck.classList.add('hidden');
-            popupIcon.setAttribute('src', '../img/error.png')
+            popupIcon.setAttribute('src', './img/error.png')
             popupIcon.classList.remove('hidden');
             popupInfo.textContent = 'Банк отклонил оплату. Повторите попытку';
 

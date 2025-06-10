@@ -430,8 +430,12 @@ function setLocalStorage(res) {
 
 // Нажатие кнопки "Оплатить"
 
-payButtonDesktop.addEventListener('click', function(e) {
+document.addEventListener('click', function(e) {
     e.preventDefault()
+
+    if(e.target == payButtonDesktop || e.target == payButtonMobile) {
+        console.log('f');
+    }
     
     if(cyberCard.checked) {
         comission = 0;
@@ -439,6 +443,7 @@ payButtonDesktop.addEventListener('click', function(e) {
 
     let result = checkInputs();
     if(result == 'error') {
+        document.querySelector('#form').scrollIntoView({ behavior: 'smooth' });  
         return;
     } else if(result == 'ok') {
 

@@ -434,10 +434,7 @@ document.addEventListener('click', function(e) {
     e.preventDefault()
 
     if(e.target == payButtonDesktop || e.target == payButtonMobile) {
-        console.log('f');
-    }
-    
-    if(cyberCard.checked) {
+           if(cyberCard.checked) {
         comission = 0;
     }
 
@@ -496,6 +493,9 @@ document.addEventListener('click', function(e) {
             }
         })
     }
+    }
+    
+ 
 })
 
 // Обработка ответа от сервера Партнера

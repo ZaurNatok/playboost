@@ -18,6 +18,8 @@ let paymentServiceParameters = document.querySelector('.payment-info__form');
 let popupInfo = document.querySelector('.popup__content');
 let popupIcon = popup.querySelector('.popup__icon');
 let payAfterCheck = popup.querySelector('.payAfterCheck');
+let paymentInfoBlock = document.querySelector('.content-block_pay');
+let stickyPay = document.querySelector('.sticky-element');
 
 let paymentSum = document.querySelector('.topup-sum');
 let paymentComission = document.querySelector('.payment-comission');
@@ -29,6 +31,11 @@ let comission = 50;
 let cyberCashback = 0.05;
 let sumToPay = 0;
 let sumToPopup = 0;
+
+document.addEventListener('click', function(e) {
+    console.log(e.target)
+})
+
 
 // Определяем id сервиса
 
@@ -75,8 +82,8 @@ function loadServiceParameters(theService) {
         paymentElementInput.classList.add('payment-info__element');
         paymentElementLabel.classList.add('payment-info__label');
         paymentInput.classList.add('payment-info__input');
-        paymentInput.setAttribute('name', el.name)
-        paymentInputError.classList.add('error')
+        paymentInput.setAttribute('name', el.name);
+        paymentInputError.classList.add('error');
         paymentInputQuestionIcon.classList.add('payment-info__question-icon');
         paymentInputQuestionIcon.setAttribute('style', 'background-image: url(./img/question.png);')
 
@@ -88,6 +95,26 @@ function loadServiceParameters(theService) {
 
         paymentElementLabel.textContent = el.title;
         paymentInput.setAttribute('placeholder', el.title + ' ' + theService.name);
+        paymentInput.setAttribute('pattern', el.regexp);
+
+        if(el.required == true) {
+            paymentInput.setAttribute('required', true);
+        };
+
+        paymentInput.addEventListener('input', function() {
+
+            if(!paymentInput.value == '') {
+                let regex = new RegExp(el.regexp);
+                if(regex.test(paymentInput.value) == false) {
+                    paymentInputError.classList.remove('hidden');
+                    paymentInputError.textContent = 'Проверьте корректность введенных данных';
+                } else {
+                    paymentInputError.classList.add('hidden');
+                    paymentInputError.textContent = '';
+                }
+            }
+        })
+
     })
 
     // Если не ваучер - отрисовываем инпут для ввода суммы
@@ -331,11 +358,22 @@ function ifCyberCard() {
     }
 }
 
-
 paymentMethods.addEventListener('click', function(){
     ifCyberCard();
-    paymentAmountAndCashbacks();
-});
+    let paymentAmount = document.querySelector('.payment-sum');
+    
+    if(cyberCard.checked) {
+        comission = 0;
+        paymentComission.textContent = 0 + ' ' + '₽';
+        finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
+        finalSumMobileSticky.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
+    } else {
+        comission = 50;
+        paymentComission.textContent = 50 + ' ' + '₽';
+        finalSumMobileSticky.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
+
+    }
+})
 
 // расчет суммы к оплате, к зачислению, скидок и кэшбеков
 paymentAmountAndCashbacks();
@@ -380,7 +418,7 @@ if (screen.width < 431) {
         let intro = window.document.getElementById("summary-block").offsetTop;
         let fixed = document.querySelector(".sticky-element");
         let scrolled = window.pageYOffset;
-    
+
         if(scrolled < intro) {
             fixed.style = 'display: block';
         } else {
@@ -430,73 +468,84 @@ function setLocalStorage(res) {
 
 // Нажатие кнопки "Оплатить"
 
-document.addEventListener('click', function(e) {
-    e.preventDefault()
+payButtonDesktop.addEventListener('click', function(e) {
+    e.preventDefault();
 
-    if(e.target == payButtonDesktop || e.target == payButtonMobile) {
-           if(cyberCard.checked) {
-        comission = 0;
+    if(e.target == payButtonDesktop) {
+        startPay();
     }
+})
 
-    let result = checkInputs();
-    if(result == 'error') {
-        document.querySelector('#form').scrollIntoView({ behavior: 'smooth' });  
-        return;
-    } else if(result == 'ok') {
+stickyPay.addEventListener('click', function(e) {
+    e.preventDefault();
 
-        let theForm = document.forms.paymentParams;
-        console.log(theForm.elements)
-        payButtonDesktop.removeAttribute('disabled');
-        let agentTransactionId = generatetransactionId();
-        
-        sumToPay = theForm.elements.sumToPay.value;
+    if(e.target == payButtonMobile) {
+        startPay();
+    }
+})
 
-        let dateTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
-        popup.classList.remove('hidden');
-        loaderPopup.classList.remove('hidden');
+function startPay() {
 
-            fetch('https://api.payforsteam.ru/check', { 
-                method: 'POST', 
-                headers: { 
-                    'Content-Type': 'application/json'
-                }, 
-                body: JSON.stringify({
+    if(cyberCard.checked) {
+            comission = 0;
+        }
+
+        let result = checkInputs();
+        if(result == 'error') {
+            document.querySelector('#form').scrollIntoView({ behavior: 'smooth' });  
+            return;
+        } else if(result == 'ok') {
+
+            let theForm = document.forms.paymentParams;
+            console.log(theForm.elements)
+            payButtonDesktop.removeAttribute('disabled');
+            let agentTransactionId = generatetransactionId();
+            
+            sumToPay = theForm.elements.sumToPay.value;
+
+            let dateTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
+            popup.classList.remove('hidden');
+            loaderPopup.classList.remove('hidden');
+
+                fetch('https://api.payforsteam.ru/check', { 
+                    method: 'POST', 
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    }, 
+                    body: JSON.stringify({
+                        'serviceId': value,
+                        'account': theForm.elements.account.value,
+                        'agentTransactionId': agentTransactionId,
+                        'agentTransactionDate': dateTime,
+                        'amountTo': Number(sumToPay),
+                        'amountFrom': Number(sumToPay) + comission
+                })})
+                .then(res => {
+                    return res.json()
+                })
+                .then(res => resultOrcestrator(res.result, agentTransactionId, res, dateTime, theForm.elements.account.value))
+                    // параметры сервиса - ответ от сервера
+                .catch(err => console.log({ err }))
+
+                let thePayment = {
                     'serviceId': value,
                     'account': theForm.elements.account.value,
                     'agentTransactionId': agentTransactionId,
                     'agentTransactionDate': dateTime,
                     'amountTo': Number(sumToPay),
                     'amountFrom': Number(sumToPay) + comission
-            })})
-            .then(res => {
-                return res.json()
+                }
+
+            popup.addEventListener('click', (e) => {
+                if(e.target.classList.contains('close') || e.target.classList.contains('popup__wrapper')) {
+                    popup.classList.add('hidden');
+                    popupIcon.classList.add('hidden');
+                    popupInfo.textContent = '';
+                    location.reload()
+                }
             })
-            .then(res => resultOrcestrator(res.result, agentTransactionId, res, dateTime, theForm.elements.account.value))
-                // параметры сервиса - ответ от сервера
-            .catch(err => console.log({ err }))
-
-            let thePayment = {
-                'serviceId': value,
-                'account': theForm.elements.account.value,
-                'agentTransactionId': agentTransactionId,
-                'agentTransactionDate': dateTime,
-                'amountTo': Number(sumToPay),
-                'amountFrom': Number(sumToPay) + comission
-            }
-
-        popup.addEventListener('click', (e) => {
-            if(e.target.classList.contains('close') || e.target.classList.contains('popup__wrapper')) {
-                popup.classList.add('hidden');
-                popupIcon.classList.add('hidden');
-                popupInfo.textContent = '';
-                location.reload()
-            }
-        })
-    }
-    }
-    
- 
-})
+        }
+}
 
 // Обработка ответа от сервера Партнера
 
@@ -647,17 +696,36 @@ function timeFormat() {
 
 function checkInputs() {
 
-    for(let i = 0; i < paymentServiceParameters.elements.length; i++) {
-        if(paymentServiceParameters.elements[i].value == '') {
-            paymentServiceParameters.elements[i].nextElementSibling.classList.remove('hidden');
-            paymentServiceParameters.elements[i].nextElementSibling.textContent = 'Это обязательное поле';
+    let theForm = document.forms.paymentParams;
+    for(let i = 0; i < theForm.elements.length; i++) {
+        if(theForm.elements[i].value == '') {
+            theForm.elements[i].nextElementSibling.classList.remove('hidden');
+            theForm.elements[i].nextElementSibling.textContent = 'Это обязательное поле';
             return 'error';
-        } 
-        else if(paymentServiceParameters.elements[i].nextElementSibling.textContent != '') {
-            paymentServiceParameters.elements[i].nextElementSibling.textContent = '';
-            return 'ok';
+        } else if(theForm.elements[i].nextElementSibling.textContent != '') {
+            return 'error';
         }
     }
+
+    // if(document.querySelector('.payment-sum') && document.querySelector('.payment-sum').value < 10 || document.querySelector('.payment-sum').value > 15000) {
+    //     let sumInput = document.querySelector('.payment-sum');
+    //     sumInput.nextElementSibling.classList.remove('hidden');
+    //     sumInput.nextElementSibling.textContent = 'Минимальная сумма оплаты 10 рублей, максимальная 15 000 рублей';
+    //     return 'error';
+    // }
+
+    // return 'ok';
+
+    // for(let i = 0; i < paymentServiceParameters.elements.length; i++) {
+    //     if(paymentServiceParameters.elements[i].value == '') {
+    //         paymentServiceParameters.elements[i].nextElementSibling.classList.remove('hidden');
+    //         paymentServiceParameters.elements[i].nextElementSibling.textContent = 'Это обязательное поле';
+    //         return 'error';
+    //     } else if(paymentServiceParameters.elements[i].nextElementSibling.textContent != '') {
+    //         paymentServiceParameters.elements[i].nextElementSibling.textContent = '';
+    //         return 'ok';
+    //     }
+    // }
 
     if(document.querySelector('.payment-sum') && document.querySelector('.payment-sum').value < 10 || document.querySelector('.payment-sum').value > 15000) {
         let sumInput = document.querySelector('.payment-sum');

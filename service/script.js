@@ -371,7 +371,7 @@ paymentMethods.addEventListener('click', function(){
         comission = 50;
         paymentComission.textContent = 50 + ' ' + '₽';
         finalSumMobileSticky.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
-
+        finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
     }
 })
 
@@ -488,6 +488,8 @@ function startPay() {
 
     if(cyberCard.checked) {
             comission = 0;
+        } else {
+            comission = 50;
         }
 
         let result = checkInputs();

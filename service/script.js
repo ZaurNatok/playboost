@@ -28,14 +28,9 @@ let finalSum = document.querySelector('.summary');
 let finalSumMobileSticky = document.querySelector('.summary-mobile');
 
 let comission = 50;
-let cyberCashback = 0.05;
+let cyberCashback = 0.15;
 let sumToPay = 0;
 let sumToPopup = 0;
-
-document.addEventListener('click', function(e) {
-    console.log(e.target)
-})
-
 
 // Определяем id сервиса
 
@@ -364,14 +359,17 @@ paymentMethods.addEventListener('click', function(){
     
     if(cyberCard.checked) {
         comission = 0;
-        paymentComission.textContent = 0 + ' ' + '₽';
+        paymentComission.textContent = Number(comission) + ' ' + '₽';
         finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
         finalSumMobileSticky.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
+        cashback.textContent = (Number(paymentAmount.value) * Number(cyberCashback)).toLocaleString() + ' ' + '₽';
     } else {
         comission = 50;
-        paymentComission.textContent = 50 + ' ' + '₽';
+        cyberCashback = 0;
+        paymentComission.textContent = Number(comission) + ' ' + '₽';
         finalSumMobileSticky.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
         finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
+        cashback.textContent = (Number(paymentAmount.value) * Number(cyberCashback)).toLocaleString() + ' ' + '₽';
     }
 })
 
@@ -382,7 +380,7 @@ function paymentAmountAndCashbacks() {
     let thePaymentDetails = {
         amount: document.querySelector('.payment-sum').value,
         comission: comission,
-        cashback: 0,
+        cashback: 0.15,
         promoCode: 0
     }
 

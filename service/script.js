@@ -359,6 +359,7 @@ paymentMethods.addEventListener('click', function(){
     
     if(cyberCard.checked) {
         comission = 0;
+        cyberCashback = 0.15;
         paymentComission.textContent = Number(comission) + ' ' + '₽';
         finalSum.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
         finalSumMobileSticky.textContent = (Number(paymentAmount.value) + Number(comission)).toLocaleString() + ' ' + '₽';
